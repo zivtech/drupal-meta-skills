@@ -1,1260 +1,530 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>drupal-critic — Visual Explainer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  /* ============ THEME ============ */
-  :root {
-    --font-body: 'DM Sans', system-ui, sans-serif;
-    --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
-
-    --bg: #f6f8fa;
-    --surface: #ffffff;
-    --surface2: #eef2f6;
-    --surface-elevated: #ffffff;
-    --border: rgba(0, 0, 0, 0.08);
-    --border-bright: rgba(0, 0, 0, 0.15);
-    --text: #1b2838;
-    --text-dim: #5a6a7a;
-
-    /* Drupal-inspired palette */
-    --drupal-blue: #0678BE;
-    --drupal-blue-dim: rgba(6, 120, 190, 0.08);
-    --drupal-blue-light: #e8f4fc;
-    --drupal-navy: #1a3550;
-    --core: #0678BE;
-    --core-dim: rgba(6, 120, 190, 0.08);
-    --security: #be123c;
-    --security-dim: rgba(190, 18, 60, 0.08);
-    --ops: #0f766e;
-    --ops-dim: rgba(15, 118, 110, 0.08);
-    --contrib: #7c3aed;
-    --contrib-dim: rgba(124, 58, 237, 0.08);
-    --cache: #d97706;
-    --cache-dim: rgba(217, 119, 6, 0.08);
-    --canvas: #059669;
-    --canvas-dim: rgba(5, 150, 105, 0.08);
-    --tooling: #64748b;
-    --tooling-dim: rgba(100, 116, 139, 0.08);
-    --verdict: #1e3a5f;
-    --verdict-dim: rgba(30, 58, 95, 0.08);
-    --accent: var(--drupal-blue);
-    --accent-dim: var(--drupal-blue-dim);
-  }
-
-  @media (prefers-color-scheme: dark) {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>drupal-meta-skill — Visual Explainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #1c2433;
-      --surface-elevated: #1f2937;
-      --border: rgba(255, 255, 255, 0.06);
-      --border-bright: rgba(255, 255, 255, 0.12);
-      --text: #e6edf3;
-      --text-dim: #8b949e;
-
-      --drupal-blue: #3b9fd6;
-      --drupal-blue-dim: rgba(59, 159, 214, 0.12);
-      --drupal-blue-light: #162636;
-      --drupal-navy: #a8c7e0;
-      --core: #3b9fd6;
-      --core-dim: rgba(59, 159, 214, 0.12);
-      --security: #f87171;
-      --security-dim: rgba(248, 113, 113, 0.12);
-      --ops: #5eead4;
-      --ops-dim: rgba(94, 234, 212, 0.12);
-      --contrib: #a78bfa;
-      --contrib-dim: rgba(167, 139, 250, 0.12);
-      --cache: #fbbf24;
-      --cache-dim: rgba(251, 191, 36, 0.12);
-      --canvas: #34d399;
-      --canvas-dim: rgba(52, 211, 153, 0.12);
-      --tooling: #94a3b8;
-      --tooling-dim: rgba(148, 163, 184, 0.12);
-      --verdict: #93c5fd;
-      --verdict-dim: rgba(147, 197, 253, 0.12);
-      --accent: var(--drupal-blue);
-      --accent-dim: var(--drupal-blue-dim);
+      --bg: #07131d;
+      --panel: rgba(12, 28, 40, 0.86);
+      --panel-2: rgba(18, 40, 54, 0.92);
+      --line: rgba(143, 211, 255, 0.16);
+      --text: #edf7fb;
+      --muted: #9db5c2;
+      --blue: #3aa4df;
+      --teal: #22a98b;
+      --gold: #f3a73f;
+      --red: #ff6f61;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --font-display: "Source Serif 4", serif;
+      --font-body: "Space Grotesk", sans-serif;
+      --font-mono: "IBM Plex Mono", monospace;
     }
-  }
 
-  /* ============ RESET ============ */
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    background-image:
-      radial-gradient(ellipse at 15% 0%, var(--drupal-blue-dim) 0%, transparent 50%),
-      radial-gradient(ellipse at 85% 100%, var(--ops-dim) 0%, transparent 40%);
-    color: var(--text);
-    font-family: var(--font-body);
-    padding: 40px;
-    min-height: 100vh;
-    overflow-wrap: break-word;
-  }
-
-  /* ============ ANIMATION ============ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeScale {
-    from { opacity: 0; transform: scale(0.92); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  .anim { animation: fadeUp 0.45s ease-out both; animation-delay: calc(var(--i, 0) * 0.05s); }
-  .anim-scale { animation: fadeScale 0.4s ease-out both; animation-delay: calc(var(--i, 0) * 0.05s); }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-delay: 0ms !important;
-      transition-duration: 0.01ms !important;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(circle at top left, rgba(58,164,223,0.20), transparent 32%),
+        radial-gradient(circle at 82% 18%, rgba(34,169,139,0.16), transparent 22%),
+        linear-gradient(180deg, #081019, #07131d 58%, #0a1723);
+      min-height: 100vh;
     }
-  }
 
-  /* ============ LAYOUT ============ */
-  .wrap {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 0 40px;
-  }
-  .main { min-width: 0; }
-
-  /* ============ NAV ============ */
-  .toc {
-    position: sticky;
-    top: 24px;
-    align-self: start;
-    padding: 14px 0;
-    grid-row: 1 / -1;
-    max-height: calc(100dvh - 48px);
-    overflow-y: auto;
-  }
-  .toc::-webkit-scrollbar { width: 3px; }
-  .toc::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 2px; }
-  .toc-title {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    padding: 0 0 10px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  .toc a {
-    display: block;
-    font-size: 11px;
-    color: var(--text-dim);
-    text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 5px;
-    border-left: 2px solid transparent;
-    transition: all 0.15s;
-    line-height: 1.4;
-    margin-bottom: 1px;
-  }
-  .toc a:hover { color: var(--text); background: var(--surface2); }
-  .toc a.active { color: var(--text); border-left-color: var(--drupal-blue); }
-
-  @media (max-width: 1000px) {
-    .wrap { grid-template-columns: 1fr; padding-top: 0; }
-    body { padding: 20px; padding-top: 0; }
-    .toc {
-      position: sticky; top: 0; z-index: 200;
-      max-height: none; display: flex; gap: 4px; align-items: center;
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
-      background: var(--bg); border-bottom: 1px solid var(--border);
-      padding: 10px 0; margin: 0 -20px; padding-left: 20px; padding-right: 20px;
-      grid-row: auto;
+    .shell {
+      width: min(1220px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 22px 0 54px;
     }
-    .toc::-webkit-scrollbar { display: none; }
-    .toc-title { display: none; }
-    .toc a {
-      white-space: nowrap; flex-shrink: 0; border-left: none;
-      border-bottom: 2px solid transparent; border-radius: 4px 4px 0 0;
-      padding: 6px 10px; font-size: 10px;
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 14px;
     }
-    .toc a.active { border-left: none; border-bottom-color: var(--drupal-blue); background: var(--surface); }
-    .main { padding-top: 20px; }
-    .sec-head { scroll-margin-top: 52px; }
-  }
 
-  /* ============ TYPOGRAPHY ============ */
-  h1 {
-    font-size: 42px;
-    font-weight: 700;
-    letter-spacing: -1.5px;
-    margin-bottom: 6px;
-    text-wrap: balance;
-    color: var(--drupal-navy);
-  }
-  .subtitle {
-    color: var(--text-dim);
-    font-size: 15px;
-    margin-bottom: 8px;
-    line-height: 1.5;
-  }
-  .meta-line {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 36px;
-  }
-  .meta-line a { color: var(--drupal-blue); text-decoration: none; }
-  .meta-line a:hover { text-decoration: underline; }
+    .topline a,
+    .footer a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 700;
+    }
 
-  /* ============ SECTION HEAD ============ */
-  .sec-head {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.8px;
-    padding: 20px 0 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .sec-head .dot {
-    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
-  }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      margin-bottom: 24px;
+    }
 
-  /* ============ CARDS ============ */
-  .ve-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-  }
-  .ve-card--hero {
-    background: var(--surface-elevated);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    padding: 28px 32px;
-  }
-  .ve-card--recessed {
-    background: var(--surface2);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .ve-card h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .ve-card p, .ve-card li {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .ve-card p + p { margin-top: 8px; }
+    .panel {
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
 
-  /* ============ FLOW ============ */
-  .flow-steps {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    position: relative;
-    padding-left: 32px;
-  }
-  .flow-step {
-    position: relative;
-    padding: 12px 0 12px 24px;
-    border-left: 2px solid var(--border-bright);
-  }
-  .flow-step:last-child { border-left-color: transparent; }
-  .flow-step::before {
-    content: attr(data-num);
-    position: absolute;
-    left: -16px;
-    top: 12px;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--drupal-blue);
-    color: #fff;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-  }
-  .flow-step .step-title {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 3px;
-  }
-  .flow-step .step-desc {
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-  .flow-step--highlight { border-left-color: var(--security); }
-  .flow-step--highlight::before { background: var(--security); }
+    .hero-main {
+      padding: 34px;
+    }
 
-  /* ============ SKILL CATALOG ============ */
-  .skill-group { margin-bottom: 20px; }
-  .skill-group-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .skill-group-title .badge {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .skill-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  .skill-table th {
-    text-align: left;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--border-bright);
-  }
-  .skill-table td {
-    padding: 7px 10px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  .skill-table tr:last-child td { border-bottom: none; }
-  .skill-table tr:hover td { background: var(--surface2); }
-  .skill-table code {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
-  .priority-bar {
-    display: inline-block;
-    height: 6px;
-    border-radius: 3px;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  .trigger-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    display: inline-block;
-    margin: 1px 2px;
-    line-height: 1.4;
-  }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(58,164,223,0.12);
+      color: #8fd3ff;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
 
-  /* ============ AUDIENCE GRID ============ */
-  .audience-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .audience-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    border-top: 3px solid var(--border);
-  }
-  .audience-card--always { border-top-color: var(--drupal-blue); }
-  .audience-card--context { border-top-color: var(--cache); border-style: dashed; border-top-style: dashed; }
-  .audience-card .audience-name {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 4px;
-  }
-  .audience-card .audience-type {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-  .audience-card .audience-trigger {
-    font-size: 11px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 0.93;
+      letter-spacing: -0.04em;
+      margin: 0 0 16px;
+      max-width: 10ch;
+    }
 
-  /* ============ RUBRIC GRID ============ */
-  .rubric-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .rubric-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-    transition: border-color 0.2s;
-  }
-  .rubric-item:hover { border-color: var(--border-bright); }
-  .rubric-item .rubric-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--drupal-blue);
-    margin-bottom: 4px;
-  }
-  .rubric-item .rubric-name {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 4px;
-  }
-  .rubric-item .rubric-checks {
-    font-size: 11px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
+    .lede {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+      max-width: 62ch;
+    }
 
-  /* ============ OUTPUT CONTRACT ============ */
-  .output-flow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-  }
-  .output-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .output-block--verdict {
-    background: var(--verdict-dim);
-    border-color: var(--verdict);
-    font-weight: 700;
-    font-family: var(--font-mono);
-    font-size: 11px;
-  }
-  .output-arrow {
-    color: var(--text-dim);
-    font-size: 14px;
-    flex-shrink: 0;
-  }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-  /* ============ SEVERITY ============ */
-  .severity-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .severity-card {
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid var(--border);
-  }
-  .severity-card .sev-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-  .severity-card .sev-desc {
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-  .sev-critical { background: var(--security-dim); }
-  .sev-critical .sev-label { color: var(--security); }
-  .sev-major { background: var(--cache-dim); }
-  .sev-major .sev-label { color: var(--cache); }
-  .sev-minor { background: var(--surface2); }
-  .sev-minor .sev-label { color: var(--text-dim); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
 
-  .realist-questions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .rq-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-  }
-  .rq-card .rq-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--drupal-blue);
-    margin-bottom: 4px;
-  }
-  .rq-card .rq-q {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.5;
-  }
+    .button.primary {
+      background: linear-gradient(135deg, var(--blue), #2178ac);
+      color: #fff;
+    }
 
-  /* ============ CALLOUT ============ */
-  .callout {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--drupal-blue);
-    border-radius: 0 8px 8px 0;
-    padding: 14px 18px;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-  }
-  .callout strong { color: var(--text); }
-  .callout code {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
 
-  /* ============ ROUTING RULES ============ */
-  .routing-rules {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .rule-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
-  .rule-card .rule-num {
-    font-family: var(--font-mono);
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--drupal-blue);
-    margin-bottom: 4px;
-  }
-  .rule-card .rule-label {
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .rule-card .rule-desc {
-    font-size: 11px;
-    color: var(--text-dim);
-    line-height: 1.4;
-  }
+    .bundle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
 
-  /* ============ FOOTER ============ */
-  .page-footer {
-    text-align: center;
-    padding: 32px 0 16px;
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .page-footer a { color: var(--drupal-blue); text-decoration: none; }
-  .page-footer a:hover { text-decoration: underline; }
+    .bundle-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(143,211,255,0.08);
+    }
 
-  /* ============ NO-COPY BLOCK ============ */
-  .no-copy-visual {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-  }
-  .no-copy-diagram {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-  .no-copy-box {
-    border: 2px solid var(--border-bright);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-align: center;
-    background: var(--surface);
-  }
-  .no-copy-box--ext {
-    border-color: var(--drupal-blue);
-    border-style: dashed;
-  }
-  .no-copy-arrow {
-    font-size: 18px;
-    color: var(--text-dim);
-  }
-  .no-copy-text {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text-dim);
-  }
-  .no-copy-text strong { color: var(--text); }
+    .bundle-card .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      color: #8fd3ff;
+    }
 
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 768px) {
-    .audience-grid { grid-template-columns: 1fr; }
-    .rubric-grid { grid-template-columns: 1fr; }
-    .severity-row { grid-template-columns: 1fr; }
-    .realist-questions { grid-template-columns: 1fr; }
-    .routing-rules { grid-template-columns: 1fr; }
-    .output-flow { flex-direction: column; align-items: flex-start; }
-    .output-arrow { transform: rotate(90deg); }
-    .no-copy-visual { flex-direction: column; }
-    .no-copy-diagram { flex-direction: column; }
-  }
+    .bundle-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
-  @media (max-width: 1000px) and (min-width: 769px) {
-    .audience-grid { grid-template-columns: repeat(2, 1fr); }
-    .rubric-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+    .hero-side {
+      padding: 26px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .stat {
+      padding: 18px 18px 16px;
+      border-radius: 24px;
+      background: var(--panel-2);
+      border: 1px solid rgba(143,211,255,0.08);
+    }
+
+    .stat .meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-family: var(--font-display);
+      font-size: 42px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .section {
+      margin-top: 18px;
+      padding: 30px;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
+    }
+
+    .section > p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 74ch;
+    }
+
+    .three-up {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .lane {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(143,211,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lane .lane-tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .lane.plan .lane-tag { background: rgba(58,164,223,0.12); color: #8fd3ff; }
+    .lane.exec .lane-tag { background: rgba(34,169,139,0.14); color: #91ead7; }
+    .lane.crit .lane-tag { background: rgba(243,167,63,0.12); color: #ffd08d; }
+
+    .lane h3 {
+      margin: 0 0 10px;
+      font-size: 23px;
+    }
+
+    .lane ul,
+    .steps ol,
+    .commands ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(143,211,255,0.08);
+    }
+
+    .diagram {
+      padding: 18px;
+      border-radius: 22px;
+      background: #091722;
+      border: 1px solid rgba(143,211,255,0.08);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.75;
+      color: #d8f2ff;
+      overflow-x: auto;
+    }
+
+    .commands {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .commands h3,
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding: 22px 26px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .three-up,
+      .steps,
+      .commands,
+      .bundle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shell {
+        width: min(100% - 20px, 1220px);
+      }
+
+      .hero-main,
+      .hero-side,
+      .section {
+        padding: 24px;
+      }
+
+      .footer,
+      .topline {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<div class="wrap">
-
-  <nav class="toc" id="toc">
-    <div class="toc-title">Contents</div>
-    <a href="#s1">Overview</a>
-    <a href="#s2">Review Workflow</a>
-    <a href="#s3">Skill Catalog (24)</a>
-    <a href="#s4">Routing Rules</a>
-    <a href="#s5">Audience Perspectives</a>
-    <a href="#s6">Review Rubric</a>
-    <a href="#s7">Output Contract</a>
-    <a href="#s8">Severity + Realist Check</a>
-    <a href="#s9">No-Copy Policy</a>
-    <a href="#s10">Supply Chain Security</a>
-  </nav>
-
-  <div class="main">
-
-    <!-- HEADER -->
-    <h1 class="anim" style="--i:0">drupal-critic</h1>
-    <p class="subtitle anim" style="--i:1">A Drupal-specific harsh-review orchestrator for Claude Code. Coordinates 24 external specialist skills to deliver evidence-backed critique of Drupal plans, code, and operational workflows.</p>
-    <p class="meta-line anim" style="--i:2">
+  <main class="shell">
+    <div class="topline">
+      <span>Drupal planner + critic + config executor for Claude Code</span>
       <a href="https://github.com/zivtech/drupal-meta-skill">github.com/zivtech/drupal-meta-skill</a>
-      &nbsp;&middot;&nbsp; by <a href="https://www.zivtech.com">Zivtech</a>
-      &nbsp;&middot;&nbsp; companion to <a href="https://github.com/zivtech/harsh-critic">harsh-critic</a>
-    </p>
-
-    <!-- S1: OVERVIEW -->
-    <div id="s1" class="sec-head anim" style="--i:3"><span class="dot" style="background:var(--drupal-blue)"></span> Overview</div>
-
-    <div class="ve-card ve-card--hero anim" style="--i:4">
-      <p>drupal-critic runs a structured, multi-phase review against any Drupal artifact: module code, deployment plans, config workflows, contrib patch decisions, cache strategies, migration scripts, or Composer/Drush/DDEV operations.</p>
-      <p>It ships as both a <strong>Claude Code skill</strong> (invoked via <code>/drupal-critic</code>) and a <strong>read-only agent</strong> (Opus model, no Write/Edit tools). The skill orchestrates up to 3 external specialist skills per review, selected by context from a catalog of 24 community-maintained Drupal skills.</p>
-      <p>Three audience perspectives always run (Security, New-hire, Ops). Three more activate when the review context demands them. Every CRITICAL and MAJOR finding must include concrete evidence &mdash; <code>file:line</code> references or artifact quotes. Anything speculative gets moved to Open Questions.</p>
     </div>
 
-    <!-- S2: REVIEW WORKFLOW -->
-    <div id="s2" class="sec-head anim" style="--i:5"><span class="dot" style="background:var(--drupal-blue)"></span> Review Workflow</div>
-
-    <div class="ve-card anim" style="--i:6">
-      <div class="flow-steps">
-        <div class="flow-step anim" style="--i:7" data-num="1">
-          <div class="step-title">Confirm Scope</div>
-          <div class="step-desc">Identify the review target: module code, deployment plan, config change, migration, etc. Narrow by component/feature/path if too broad.</div>
+    <section class="hero">
+      <div class="panel hero-main">
+        <div class="eyebrow">One Drupal architecture lane</div>
+        <h1>drupal-meta-skill</h1>
+        <p class="lede">A consolidated workflow for Drupal teams that need architecture planning, deterministic config generation, and Drupal-specific review without splitting that work across separate repos or generic prompts.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/zivtech/drupal-meta-skill">Open Repository</a>
+          <a class="button secondary" href="#workflow">See Workflow</a>
         </div>
-        <div class="flow-step anim" style="--i:8" data-num="2">
-          <div class="step-title">Pre-commitment Predictions</div>
-          <div class="step-desc">Make 3&ndash;5 predictions about likely failure points before the deep review begins. Anchors the investigation against confirmation bias.</div>
-        </div>
-        <div class="flow-step anim" style="--i:9" data-num="3">
-          <div class="step-title">Protocol Phases</div>
-          <div class="step-desc">Run verification, multi-perspective analysis, explicit gap analysis, and synthesis &mdash; in order.</div>
-        </div>
-        <div class="flow-step anim" style="--i:10" data-num="4">
-          <div class="step-title">Plan-Specific Checks</div>
-          <div class="step-desc">For plans/specs only: key assumptions extraction, pre-mortem, dependency audit, ambiguity scan, feasibility check, rollback analysis, devil's-advocate challenge.</div>
-        </div>
-        <div class="flow-step anim" style="--i:11" data-num="5">
-          <div class="step-title">Self-Audit</div>
-          <div class="step-desc">Move LOW-confidence or easily-refutable claims to Open Questions. Downgrade or remove preference/style-only points from scored sections.</div>
-        </div>
-        <div class="flow-step flow-step--highlight anim" style="--i:12" data-num="6">
-          <div class="step-title">Realist Check</div>
-          <div class="step-desc">Every surviving CRITICAL/MAJOR finding gets reality-tested with 4 questions. Severity can be downgraded &mdash; except for data loss, security breach, or financial impact. Every downgrade requires a "Mitigated by:" statement.</div>
-        </div>
-        <div class="flow-step anim" style="--i:13" data-num="7">
-          <div class="step-title">Apply Drupal Rubric</div>
-          <div class="step-desc">Score against 9 dimensions: security, architecture, contrib lens, site builder lens, editor lens, ops safety, caching, testing, review confidence.</div>
-        </div>
-        <div class="flow-step anim" style="--i:14" data-num="8">
-          <div class="step-title">Activate Audience Perspectives</div>
-          <div class="step-desc">3 always-on (Security, New-hire, Ops) + up to 3 context-driven (Open Source Contributor, Site Builder, Content Editor/Marketer).</div>
-        </div>
-        <div class="flow-step anim" style="--i:15" data-num="9">
-          <div class="step-title">Load External Skills</div>
-          <div class="step-desc">Select max 2&ndash;3 specialist skills from the 24-skill catalog via routing map. Default: one core review skill + one specialist skill.</div>
-        </div>
-        <div class="flow-step anim" style="--i:16" data-num="10">
-          <div class="step-title">Structured Verdict</div>
-          <div class="step-desc">Return the complete output contract: VERDICT, findings, perspective notes, justification, and open questions.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- S3: SKILL CATALOG -->
-    <div id="s3" class="sec-head anim" style="--i:17"><span class="dot" style="background:var(--core)"></span> External Skills Catalog &mdash; 24 Skills</div>
-
-    <!-- Core Review -->
-    <div class="skill-group anim" style="--i:18">
-      <div class="skill-group-title">
-        Core Review
-        <span class="badge" style="background:var(--core-dim);color:var(--core);">Always Eligible</span>
-        <span class="badge" style="background:var(--core-dim);color:var(--core);">Highest Priority</span>
-      </div>
-      <div class="ve-card" style="padding:0;overflow:hidden;">
-        <table class="skill-table">
-          <thead><tr><th>Skill</th><th>Author</th><th>Priority</th><th>Activated When</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>drupal-expert</code></td>
-              <td>madsnorgaard</td>
-              <td><span class="priority-bar" style="width:60px;background:var(--core)"></span>100</td>
-              <td><span class="trigger-tag" style="background:var(--core-dim);color:var(--core)">any Drupal review</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-security</code></td>
-              <td>madsnorgaard</td>
-              <td><span class="priority-bar" style="width:60px;background:var(--core)"></span>100</td>
-              <td><span class="trigger-tag" style="background:var(--security-dim);color:var(--security)">security concerns</span> <span class="trigger-tag" style="background:var(--core-dim);color:var(--core)">any Drupal review</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-update</code></td>
-              <td>bethamil</td>
-              <td><span class="priority-bar" style="width:54px;background:var(--core)"></span>90</td>
-              <td><span class="trigger-tag" style="background:var(--ops-dim);color:var(--ops)">updates / deploys</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-development</code></td>
-              <td>mindrally</td>
-              <td><span class="priority-bar" style="width:42px;background:var(--core)"></span>70</td>
-              <td><span class="trigger-tag" style="background:var(--core-dim);color:var(--core)">custom module dev</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Open Source / Issue Queue -->
-    <div class="skill-group anim" style="--i:19">
-      <div class="skill-group-title">
-        Open Source / Issue Queue
-        <span class="badge" style="background:var(--contrib-dim);color:var(--contrib);">Context-Driven</span>
-      </div>
-      <div class="ve-card" style="padding:0;overflow:hidden;">
-        <table class="skill-table">
-          <thead><tr><th>Skill</th><th>Author</th><th>Priority</th><th>Activated When</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>drupal-issue-queue</code></td>
-              <td>scottfalconer</td>
-              <td><span class="priority-bar" style="width:51px;background:var(--contrib)"></span>85</td>
-              <td><span class="trigger-tag" style="background:var(--contrib-dim);color:var(--contrib)">issue queue work</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-contribute-fix</code></td>
-              <td>scottfalconer</td>
-              <td><span class="priority-bar" style="width:50px;background:var(--contrib)"></span>84</td>
-              <td><span class="trigger-tag" style="background:var(--contrib-dim);color:var(--contrib)">upstream fix / patch</span></td>
-            </tr>
-            <tr>
-              <td><code>drupalorg-issue-helper</code></td>
-              <td>kanopi</td>
-              <td><span class="priority-bar" style="width:42px;background:var(--contrib)"></span>70</td>
-              <td><span class="trigger-tag" style="background:var(--contrib-dim);color:var(--contrib)">d.o issue triage</span></td>
-            </tr>
-            <tr>
-              <td><code>drupalorg-contribution-helper</code></td>
-              <td>kanopi</td>
-              <td><span class="priority-bar" style="width:42px;background:var(--contrib)"></span>70</td>
-              <td><span class="trigger-tag" style="background:var(--contrib-dim);color:var(--contrib)">contrib workflow</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Cache & Rendering -->
-    <div class="skill-group anim" style="--i:20">
-      <div class="skill-group-title">
-        Cache &amp; Rendering
-        <span class="badge" style="background:var(--cache-dim);color:var(--cache);">Context-Driven</span>
-      </div>
-      <div class="ve-card" style="padding:0;overflow:hidden;">
-        <table class="skill-table">
-          <thead><tr><th>Skill</th><th>Author</th><th>Priority</th><th>Activated When</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>drupal-cache-contexts</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:45px;background:var(--cache)"></span>75</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">cache context issues</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-cache-tags</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:45px;background:var(--cache)"></span>75</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">cache invalidation</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-cache-maxage</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:45px;background:var(--cache)"></span>75</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">TTL / max-age config</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-dynamic-cache</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:45px;background:var(--cache)"></span>75</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">dynamic page cache</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-cache-debugging</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:45px;background:var(--cache)"></span>75</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">cache debug / perf</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-lazy-builders</code></td>
-              <td>sparkfabrik</td>
-              <td><span class="priority-bar" style="width:44px;background:var(--cache)"></span>74</td>
-              <td><span class="trigger-tag" style="background:var(--cache-dim);color:var(--cache)">lazy builders / BigPipe</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Canvas / Components -->
-    <div class="skill-group anim" style="--i:21">
-      <div class="skill-group-title">
-        Canvas / Components
-        <span class="badge" style="background:var(--canvas-dim);color:var(--canvas);">Context-Driven</span>
-      </div>
-      <div class="ve-card" style="padding:0;overflow:hidden;">
-        <table class="skill-table">
-          <thead><tr><th>Skill</th><th>Author</th><th>Priority</th><th>Activated When</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>canvas-component-definition</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-              <td rowspan="7" style="vertical-align:middle"><span class="trigger-tag" style="background:var(--canvas-dim);color:var(--canvas)">Canvas / SDC component work</span></td>
-            </tr>
-            <tr>
-              <td><code>canvas-component-metadata</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-            <tr>
-              <td><code>canvas-component-utils</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-            <tr>
-              <td><code>canvas-data-fetching</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-            <tr>
-              <td><code>canvas-styling-conventions</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-            <tr>
-              <td><code>canvas-component-composability</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-            <tr>
-              <td><code>canvas-component-upload</code></td>
-              <td>drupal-canvas</td>
-              <td><span class="priority-bar" style="width:36px;background:var(--canvas)"></span>60</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Tooling & Environment -->
-    <div class="skill-group anim" style="--i:22">
-      <div class="skill-group-title">
-        Tooling &amp; Environment
-        <span class="badge" style="background:var(--tooling-dim);color:var(--tooling);">Context-Driven</span>
-      </div>
-      <div class="ve-card" style="padding:0;overflow:hidden;">
-        <table class="skill-table">
-          <thead><tr><th>Skill</th><th>Author</th><th>Priority</th><th>Activated When</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><code>drupal-ddev</code></td>
-              <td>grasmash</td>
-              <td><span class="priority-bar" style="width:30px;background:var(--tooling)"></span>50</td>
-              <td><span class="trigger-tag" style="background:var(--tooling-dim);color:var(--tooling)">DDEV setup / config</span></td>
-            </tr>
-            <tr>
-              <td><code>drupal-tooling</code></td>
-              <td>omedia</td>
-              <td><span class="priority-bar" style="width:30px;background:var(--tooling)"></span>50</td>
-              <td><span class="trigger-tag" style="background:var(--tooling-dim);color:var(--tooling)">Composer / Drush ops</span></td>
-            </tr>
-            <tr>
-              <td><code>ddev-expert</code></td>
-              <td>madsnorgaard</td>
-              <td><span class="priority-bar" style="width:24px;background:var(--tooling)"></span>40</td>
-              <td><span class="trigger-tag" style="background:var(--tooling-dim);color:var(--tooling)">DDEV troubleshooting</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- S4: ROUTING RULES -->
-    <div id="s4" class="sec-head anim" style="--i:23"><span class="dot" style="background:var(--drupal-blue)"></span> Routing Rules</div>
-
-    <div class="callout anim" style="--i:24;border-left-color:var(--drupal-blue)">
-      Each skill carries a <strong>JTBD (Jobs-To-Be-Done) statement</strong>: &ldquo;When [situation], I want to [motivation], so I can [expected outcome].&rdquo; The agent matches the review context against these statements to select the right specialist &mdash; rather than relying on category labels and priority alone. Overlapping skills (e.g., three DDEV/tooling skills) are explicitly disambiguated by situation.
-    </div>
-
-    <div class="routing-rules anim" style="--i:25">
-      <div class="rule-card">
-        <div class="rule-num">JTBD</div>
-        <div class="rule-label">Situation Match</div>
-        <div class="rule-desc">Match review context against each skill&rsquo;s JTBD statement. Load the skill whose situation clause fits the artifact under review.</div>
-      </div>
-      <div class="rule-card">
-        <div class="rule-num">2&ndash;3</div>
-        <div class="rule-label">Max Skills Per Run</div>
-        <div class="rule-desc">Never loads more than 3 external skills in a single review. Keeps focus tight and avoids conflicting guidance.</div>
-      </div>
-      <div class="rule-card">
-        <div class="rule-num">1+1</div>
-        <div class="rule-label">Default Pattern</div>
-        <div class="rule-desc">One core review skill (priority 70&ndash;100) plus one specialist skill matched to the review context.</div>
-      </div>
-      <div class="rule-card">
-        <div class="rule-num">P100</div>
-        <div class="rule-label">Priority Wins</div>
-        <div class="rule-desc">When two skills overlap, the higher-priority active entry in the manifest wins. Avoids loading overlapping core skills unless scope is broad.</div>
-      </div>
-    </div>
-
-    <!-- S5: AUDIENCE PERSPECTIVES -->
-    <div id="s5" class="sec-head anim" style="--i:25"><span class="dot" style="background:var(--drupal-blue)"></span> Audience Perspectives</div>
-
-    <div class="audience-grid anim" style="--i:26">
-      <!-- Always-on -->
-      <div class="audience-card audience-card--always">
-        <div class="audience-type" style="color:var(--drupal-blue)">Always On</div>
-        <div class="audience-name">Security</div>
-        <div class="audience-trigger">Routes, permissions, entity queries, token checks, render safety, SQL injection vectors.</div>
-      </div>
-      <div class="audience-card audience-card--always">
-        <div class="audience-type" style="color:var(--drupal-blue)">Always On</div>
-        <div class="audience-name">New-hire</div>
-        <div class="audience-trigger">Can a new developer understand this code? Are conventions followed? Is the intent clear?</div>
-      </div>
-      <div class="audience-card audience-card--always">
-        <div class="audience-type" style="color:var(--drupal-blue)">Always On</div>
-        <div class="audience-name">Ops</div>
-        <div class="audience-trigger">Deployment safety, rollback paths, logging, failure handling, blast radius, monitoring hooks.</div>
-      </div>
-      <!-- Context-driven -->
-      <div class="audience-card audience-card--context">
-        <div class="audience-type" style="color:var(--cache)">Context-Driven</div>
-        <div class="audience-name">Open Source Contributor</div>
-        <div class="audience-trigger">Activates when contrib/core behavior is overridden, a bugfix targets third-party code, or change introduces patch maintenance burden.</div>
-      </div>
-      <div class="audience-card audience-card--context">
-        <div class="audience-type" style="color:var(--cache)">Context-Driven</div>
-        <div class="audience-name">Site Builder</div>
-        <div class="audience-trigger">Activates when changes touch content types, views, display modes, workflows, moderation, permissions, menus, media, or admin config.</div>
-      </div>
-      <div class="audience-card audience-card--context">
-        <div class="audience-type" style="color:var(--cache)">Context-Driven</div>
-        <div class="audience-name">Content Editor / Marketer</div>
-        <div class="audience-trigger">Activates when changes affect editorial workflow, content authoring UX, content model, metadata/SEO, campaign pages, or publishing cadence.</div>
-      </div>
-    </div>
-
-    <!-- S6: REVIEW RUBRIC -->
-    <div id="s6" class="sec-head anim" style="--i:27"><span class="dot" style="background:var(--drupal-blue)"></span> 9-Dimension Review Rubric</div>
-
-    <div class="rubric-grid anim" style="--i:28">
-      <div class="rubric-item">
-        <div class="rubric-num">01</div>
-        <div class="rubric-name">Security</div>
-        <div class="rubric-checks">Route permissions, accessCheck(TRUE), input validation, safe rendering, SQL via query builder</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">02</div>
-        <div class="rubric-name">Architecture &amp; Drupal Fit</div>
-        <div class="rubric-checks">Contrib-first, DI patterns, hooks vs subscribers vs plugins, config schema conventions</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">03</div>
-        <div class="rubric-name">Open Source Contributor</div>
-        <div class="rubric-checks">Upstream patch viability, issue queue research, contribution path, patch maintenance burden</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">04</div>
-        <div class="rubric-name">Site Builder (Admin UI)</div>
-        <div class="rubric-checks">Config UX, permissions/workflows practical, no hidden coupling, drush/config sync alignment</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">05</div>
-        <div class="rubric-name">Content Editor / Marketer</div>
-        <div class="rubric-checks">Editorial workflow clarity, content model, metadata/SEO fields, editorial friction minimized</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">06</div>
-        <div class="rubric-name">Operational Safety</div>
-        <div class="rubric-checks">Rollback path, Composer constraint safety, Drush DB/config/cache ordering, actionable error logs</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">07</div>
-        <div class="rubric-name">Caching &amp; Performance</div>
-        <div class="rubric-checks">Tags/contexts/max-age correct, no broad cache busting, BigPipe/lazy builders used correctly</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">08</div>
-        <div class="rubric-name">Testing &amp; Verification</div>
-        <div class="rubric-checks">Proportional test strategy, risky paths validated, acceptance includes critical user journeys</div>
-      </div>
-      <div class="rubric-item">
-        <div class="rubric-num">09</div>
-        <div class="rubric-name">Review Confidence</div>
-        <div class="rubric-checks">High-confidence findings have evidence, medium/low concerns labeled and moved to open questions</div>
-      </div>
-    </div>
-
-    <!-- S7: OUTPUT CONTRACT -->
-    <div id="s7" class="sec-head anim" style="--i:29"><span class="dot" style="background:var(--verdict)"></span> Output Contract</div>
-
-    <div class="ve-card anim" style="--i:30">
-      <p style="margin-bottom:14px;">Every drupal-critic review returns this exact structure. No section is omitted &mdash; empty sections say "None."</p>
-      <div class="output-flow">
-        <div class="output-block output-block--verdict">VERDICT</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">Overall Assessment</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">Pre-commitment Predictions</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block" style="border-color:var(--security);background:var(--security-dim)">Critical Findings</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block" style="border-color:var(--cache);background:var(--cache-dim)">Major Findings</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">Minor Findings</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">What's Missing</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block" style="border-style:dashed">Ambiguity Risks</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">Multi-Perspective Notes</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block">Verdict Justification</div>
-        <div class="output-arrow">&rarr;</div>
-        <div class="output-block" style="border-style:dashed">Open Questions (unscored)</div>
-      </div>
-      <p style="margin-top:14px;font-size:11px;color:var(--text-dim)"><strong>Verdict options:</strong> REJECT &middot; REVISE &middot; ACCEPT-WITH-RESERVATIONS &middot; ACCEPT. Dashed sections are conditional (Ambiguity Risks = plan reviews only; Open Questions = speculative/low-confidence items).</p>
-    </div>
-
-    <!-- S8: SEVERITY + REALIST CHECK -->
-    <div id="s8" class="sec-head anim" style="--i:31"><span class="dot" style="background:var(--security)"></span> Severity Calibration + Realist Check</div>
-
-    <div class="severity-row anim" style="--i:32">
-      <div class="severity-card sev-critical">
-        <div class="sev-label">Critical</div>
-        <div class="sev-desc">Exploit, security bypass, data loss, or deploy-blocking flaw. Cannot ship.</div>
-      </div>
-      <div class="severity-card sev-major">
-        <div class="sev-label">Major</div>
-        <div class="sev-desc">Likely regression or significant rework required before safe deployment.</div>
-      </div>
-      <div class="severity-card sev-minor">
-        <div class="sev-label">Minor</div>
-        <div class="sev-desc">Non-blocking correctness or maintainability issue. Style-only points excluded.</div>
-      </div>
-    </div>
-
-    <div class="ve-card anim" style="--i:33">
-      <h3>The Realist Check</h3>
-      <p style="margin-bottom:12px;">Every surviving CRITICAL and MAJOR finding must answer four questions. This prevents severity inflation from investigation momentum.</p>
-      <div class="realist-questions">
-        <div class="rq-card">
-          <div class="rq-num">Q1</div>
-          <div class="rq-q">"If we shipped this as-is today, what is the <strong>realistic</strong> worst-case outcome?" Not theoretical &mdash; the likely worst case given actual usage, traffic, and environment.</div>
-        </div>
-        <div class="rq-card">
-          <div class="rq-num">Q2</div>
-          <div class="rq-q">"Is there a <strong>mitigating factor</strong> that limits the blast radius?" Feature flag, low traffic path, existing monitoring, downstream validation, limited user exposure.</div>
-        </div>
-        <div class="rq-card">
-          <div class="rq-num">Q3</div>
-          <div class="rq-q">"How quickly could this be <strong>detected and fixed</strong> in production?" Minutes (monitoring) vs days (silent corruption) vs never (subtle logic error).</div>
-        </div>
-        <div class="rq-card">
-          <div class="rq-num">Q4</div>
-          <div class="rq-q">"Is the severity <strong>proportional to actual risk</strong>, or was it inflated by investigation momentum?"</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout anim" style="--i:34">
-      <strong>Downgrade rules:</strong> Minor inconvenience + easy rollback = CRITICAL&rarr;MAJOR. Mitigating factors contain blast radius = downgrade one level. Fast detection + straightforward fix = keep but note context. Survives all four = correctly rated. <strong>Never downgrade</strong> data loss, security breach, or financial impact. Every downgrade must include a <code>Mitigated by: ...</code> statement.
-    </div>
-
-    <!-- S9: NO-COPY POLICY -->
-    <div id="s9" class="sec-head anim" style="--i:35"><span class="dot" style="background:var(--drupal-blue)"></span> No-Copy Policy</div>
-
-    <div class="ve-card anim" style="--i:36">
-      <div class="no-copy-visual">
-        <div class="no-copy-diagram">
-          <div class="no-copy-box">
-            drupal-critic<br>
-            <span style="font-size:10px;color:var(--text-dim)">manifest.yaml</span>
+        <div class="bundle-grid">
+          <div class="bundle-card">
+            <div class="label">Planner</div>
+            <p>Design entity types, configuration schema, permissions, cache strategy, migration path, and theme implications before code.</p>
           </div>
-          <div class="no-copy-arrow">&xrarr;</div>
-          <div class="no-copy-box no-copy-box--ext">
-            External Skill<br>
-            <span style="font-size:10px;color:var(--drupal-blue)">ID + pinned SHA</span>
+          <div class="bundle-card">
+            <div class="label">Executor</div>
+            <p>Turn structured planner output into Drupal config YAML for the cases that should be generated deterministically.</p>
+          </div>
+          <div class="bundle-card">
+            <div class="label">Critic</div>
+            <p>Review implementation and generated artifacts for Drupal-specific risks generic review does not catch.</p>
           </div>
         </div>
-        <div class="no-copy-text">
-          <strong>External skills are referenced, never copied.</strong> The manifest stores each skill's <code>id</code>, <code>skills_url</code>, <code>repo_url</code>, and a <code>pinned_commit</code> (40-char SHA). CI validates that no upstream SKILL.md content has been copied into this repo. If a referenced skill is unavailable at runtime, drupal-critic falls back to its local rubric and states the limitation.
-        </div>
-      </div>
-    </div>
-
-    <!-- S10: SUPPLY CHAIN SECURITY -->
-    <div id="s10" class="sec-head anim" style="--i:37"><span class="dot" style="background:var(--security)"></span> Supply Chain Security</div>
-
-    <div class="ve-card anim" style="--i:38">
-      <p>External skills are prompt text injected into Claude&rsquo;s context. A compromised upstream repo could slip in prompt injection &mdash; instruction overrides, identity reassignment, data exfiltration directives. drupal-critic implements two tiers of supply chain protection.</p>
-
-      <h4 style="margin-top:1.2em;margin-bottom:0.6em;color:var(--security)">Tier 1: Implemented</h4>
-      <div class="flow-steps">
-        <div class="flow-step">
-          <div class="step-title">Org Allowlist</div>
-          <div class="step-desc"><code>verify_no_copied_skills.py</code> rejects any manifest entry whose repo owner is not in the <code>TRUSTED_OWNERS</code> allowlist. New sources require explicit vetting.</div>
-        </div>
-        <div class="flow-step">
-          <div class="step-title">Compare URLs</div>
-          <div class="step-desc"><code>refresh_external_skills.py</code> generates GitHub compare links for every changed pin &mdash; clickable diff review before committing.</div>
-        </div>
-        <div class="flow-step flow-step--highlight">
-          <div class="step-title">Content Scanning</div>
-          <div class="step-desc">Each changed skill&rsquo;s SKILL.md is fetched and scanned for 10 prompt injection patterns: instruction overrides, identity reassignment, base64 payloads, eval calls, fake system tags, HTML injection.</div>
-        </div>
-        <div class="flow-step flow-step--highlight">
-          <div class="step-title">Scan Gate</div>
-          <div class="step-desc">If any warnings are found, the manifest is <strong>not updated</strong> (exit code 2). Human review required. Re-run with <code>--no-scan</code> to force after review.</div>
-        </div>
       </div>
 
-      <h4 style="margin-top:1.2em;margin-bottom:0.6em;color:var(--ops)">Tier 2: Implemented</h4>
-      <div class="flow-steps">
-        <div class="flow-step">
-          <div class="step-title">Content Hashes</div>
-          <div class="step-desc">SHA-256 of each SKILL.md stored as <code>content_hash</code> in the manifest. Detects unexpected content changes at the same commit.</div>
+      <aside class="panel hero-side">
+        <div class="stat">
+          <div class="meta">Planners</div>
+          <div class="value">5+1</div>
+          <p>Main planner plus focused content-model, taxonomy, theme, and search sub-planners.</p>
         </div>
-        <div class="flow-step">
-          <div class="step-title">Audit Log</div>
-          <div class="step-desc">Every pin change appended to <code>refresh-audit.log</code> with timestamp, old/new SHAs, and content hash. Tamper-evident history of all manifest changes.</div>
+        <div class="stat">
+          <div class="meta">Review depth</div>
+          <div class="value">9</div>
+          <p>Drupal-specific dimensions including security, architecture, operational safety, cache correctness, and editorial workflow.</p>
         </div>
-        <div class="flow-step">
-          <div class="step-title">Tool Restriction</div>
-          <div class="step-desc">The drupal-critic agent runs with <code>disallowedTools: Write, Edit</code>. It reviews but cannot modify files &mdash; limiting damage from a compromised agent prompt.</div>
+        <div class="stat">
+          <div class="meta">Generation step</div>
+          <div class="value">1</div>
+          <p>Config executor closes the gap between architecture intent and YAML artifacts for content model, taxonomy, and search specs.</p>
         </div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <h2>Three lanes in one repo</h2>
+      <p>This bundle exists because Drupal problems often begin in one phase and surface in another. A weak content model creates migration pain. A missing cache context looks fine until personalized output leaks. A config decision that seems local becomes a deploy problem later. This repo keeps those decisions in a single architecture lane.</p>
+      <div class="three-up">
+        <article class="lane plan">
+          <div class="lane-tag">Plan</div>
+          <h3>/drupal-planner</h3>
+          <ul>
+            <li>Full 10-phase architecture planning for Drupal implementations.</li>
+            <li>Sub-planners for content model, taxonomy, theme, and search.</li>
+            <li>Contrib-first evaluation, permission mapping, cache strategy, migration path, and review checkpoints.</li>
+          </ul>
+        </article>
+        <article class="lane exec">
+          <div class="lane-tag">Generate</div>
+          <h3>/drupal-config-executor</h3>
+          <ul>
+            <li>Consumes planner output and produces Drupal config YAML.</li>
+            <li>Best for content model, taxonomy, and search specs.</li>
+            <li>Acts as the deterministic bridge between design and review.</li>
+          </ul>
+        </article>
+        <article class="lane crit">
+          <div class="lane-tag">Review</div>
+          <h3>/drupal-critic</h3>
+          <ul>
+            <li>Reviews Drupal implementations with domain-specific rigor.</li>
+            <li>Checks cache metadata, config workflow safety, contrib decisions, migration idempotency, and admin/editor impact.</li>
+            <li>Uses context-driven perspectives instead of generic review templates.</li>
+          </ul>
+        </article>
       </div>
+    </section>
 
-      <h4 style="margin-top:1.2em;margin-bottom:0.6em;color:var(--text-dim)">Tier 3: Still Open</h4>
-      <p style="color:var(--text-dim);font-size:13px">Pre-commit hook for agent prompt scanning &bull; Per-skill scan allowlist for known false positives &bull; Signed commit enforcement on upstream repos</p>
-    </div>
+    <section class="panel section" id="workflow">
+      <h2>Workflow</h2>
+      <div class="steps">
+        <div class="card">
+          <ol>
+            <li>Run the main planner or the right sub-planner for the scope.</li>
+            <li>Generate config YAML when the planner output is specific enough for deterministic execution.</li>
+            <li>Implement the remaining project-aware code and integration work.</li>
+            <li>Run the critic on the implementation or the generated artifacts.</li>
+            <li>Refine with Drupal-specific evidence rather than broad code-review heuristics.</li>
+          </ol>
+        </div>
+        <div class="diagram">/drupal-planner
+  or
+/drupal-planner.content-model
+/drupal-planner.taxonomy
+/drupal-planner.theme
+/drupal-planner.search
+        ↓
+/drupal-config-executor
+        ↓
+implementation / artifact review
+        ↓
+/drupal-critic</div>
+      </div>
+    </section>
 
-    <!-- FOOTER -->
-    <div class="page-footer anim" style="--i:39">
-      <a href="https://github.com/zivtech/drupal-meta-skill">drupal-meta-skill</a> by <a href="https://www.zivtech.com">Zivtech</a>
-      &nbsp;&middot;&nbsp; Companion to <a href="https://github.com/zivtech/harsh-critic">harsh-critic</a>
-      &nbsp;&middot;&nbsp; Built for <a href="https://claude.ai/code">Claude Code</a>
-    </div>
+    <section class="panel section">
+      <h2>Install</h2>
+      <div class="steps">
+        <div class="card">
+          <ol>
+            <li>Install the bundle with <strong>npx claude-skills</strong> for the fastest path.</li>
+            <li>Manual install is also supported by copying root `.claude/skills` and `.claude/agents` into your Claude configuration.</li>
+            <li>After installation, use the main planner, the relevant sub-planner, the config executor, and the critic as one workflow rather than as isolated prompts.</li>
+          </ol>
+        </div>
+        <div class="diagram">npx claude-skills add https://github.com/zivtech/drupal-meta-skill
 
-  </div><!-- /main -->
+# manual install
+git clone https://github.com/zivtech/drupal-meta-skill.git
+cp -r drupal-meta-skill/.claude/skills/* ~/.claude/skills/
+cp drupal-meta-skill/.claude/agents/*.md ~/.claude/agents/</div>
+      </div>
+    </section>
 
-</div><!-- /wrap -->
+    <section class="panel section">
+      <h2>What this bundle is trying to prevent</h2>
+      <div class="commands">
+        <article class="card">
+          <h3>Architecture debt discovered late</h3>
+          <ul>
+            <li>Entity type or field design that becomes migration work once content exists.</li>
+            <li>Permissions and workflow states left implicit until admin UX or moderation breaks.</li>
+            <li>Theme and render concerns postponed until preprocess logic becomes a dumping ground.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Operational bugs that generic review misses</h3>
+          <ul>
+            <li>Cache tags, contexts, or max-age that are almost correct and still wrong.</li>
+            <li>Config decisions that fail on deploy or drift across environments.</li>
+            <li>Custom code that duplicates contrib behavior without a justified reason.</li>
+            <li>Migration and update paths that are not idempotent or not rollback-safe.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-<!-- Scroll spy -->
-<script>
-(function() {
-  const toc = document.getElementById('toc');
-  const links = toc.querySelectorAll('a');
-  const sections = [];
-  links.forEach(link => {
-    const id = link.getAttribute('href').slice(1);
-    const el = document.getElementById(id);
-    if (el) sections.push({ id, el, link });
-  });
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const match = sections.find(s => s.el === entry.target);
-        if (match) {
-          match.link.classList.add('active');
-          if (window.innerWidth <= 1000) {
-            match.link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-          }
-        }
-      }
-    });
-  }, { rootMargin: '-10% 0px -80% 0px' });
-  sections.forEach(s => observer.observe(s.el));
-  links.forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const id = link.getAttribute('href').slice(1);
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        history.replaceState(null, '', '#' + id);
-      }
-    });
-  });
-})();
-</script>
+    <section class="panel section">
+      <h2>Commands included</h2>
+      <div class="commands">
+        <article class="card">
+          <h3>Planning</h3>
+          <ul>
+            <li><code>/drupal-planner</code></li>
+            <li><code>/drupal-planner.content-model</code></li>
+            <li><code>/drupal-planner.taxonomy</code></li>
+            <li><code>/drupal-planner.theme</code></li>
+            <li><code>/drupal-planner.search</code></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Execution and review</h3>
+          <ul>
+            <li><code>/drupal-config-executor</code></li>
+            <li><code>/drupal-critic</code></li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
+    <section class="panel footer">
+      <span>Bundled with root installable `.claude/` assets, copied protocol templates, research assets, and supply-chain validation scripts.</span>
+      <a href="https://github.com/zivtech/drupal-meta-skill">View source</a>
+    </section>
+  </main>
 </body>
 </html>
