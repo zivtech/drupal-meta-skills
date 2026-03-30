@@ -13,6 +13,7 @@ For focused subsystem planning, use the dot-notation sub-planners:
 - `/drupal-planner.content-model` — Drupal content model architecture (entity types, bundles, paragraphs, field architecture)
 - `/drupal-planner.taxonomy` — Drupal taxonomy architecture (vocabularies, term hierarchies, faceted navigation)
 - `/drupal-planner.theme` — Drupal theme architecture (base theme, components, CSS, preprocess, assets)
+- `/drupal-planner.canvas` — Canvas Code Component architecture (component definition, props, data fetching, composability, deploy)
 - `/drupal-planner.search` — Drupal search architecture (Search API, Solr/Elasticsearch, facets, Views)
 
 ## Sub-Planner Routing
@@ -23,7 +24,8 @@ When the user's request is clearly focused on one subsystem, suggest the appropr
 |--------|----------|
 | "content model", "entity types", "content types", "paragraphs", "field architecture", "bundles" | `/drupal-planner.content-model` |
 | "taxonomy", "vocabularies", "classification", "tagging", "categories", "facets" | `/drupal-planner.taxonomy` |
-| "theme", "templates", "CSS", "Twig", "components", "design system", "frontend" | `/drupal-planner.theme` |
+| "theme", "templates", "CSS", "Twig", "SDC", "design system", "frontend" | `/drupal-planner.theme` |
+| "Canvas", "Canvas Code Component", "component definition", "component props", "component composability", "Canvas styling", "component upload" | `/drupal-planner.canvas` |
 | "search", "Search API", "Solr", "Elasticsearch", "discovery", "autocomplete" | `/drupal-planner.search` |
 | General feature, module, migration, or multi-concern request | Stay with `/drupal-planner` (covers all 10 phases) |
 
@@ -66,6 +68,7 @@ Use Drupal Planner when you need to:
 - `drupal-planner.content-model`: Deep content model architecture
 - `drupal-planner.taxonomy`: Taxonomy and classification architecture
 - `drupal-planner.theme`: Theme and frontend architecture
+- `drupal-planner.canvas`: Canvas Code Component architecture
 - `drupal-planner.search`: Search and discovery architecture
 
 **Design phase (always use if installed):**

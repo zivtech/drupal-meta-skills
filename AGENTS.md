@@ -6,6 +6,7 @@
 | drupal-content-model-planner | planner | `/drupal-planner.content-model` | Content model deep dive |
 | drupal-taxonomy-planner | planner | `/drupal-planner.taxonomy` | Taxonomy deep dive |
 | drupal-theme-planner | planner | `/drupal-planner.theme` | Theme architecture deep dive |
+| drupal-canvas-planner | planner | `/drupal-planner.canvas` | Canvas Code Component architecture |
 | drupal-search-planner | planner | `/drupal-planner.search` | Search architecture deep dive |
 | drupal-critic | critic | `/drupal-critic` | Read-only Drupal review surface |
 | drupal-config-executor | executor | `/drupal-config-executor` | Generates config YAML from planner specs |

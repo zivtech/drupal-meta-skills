@@ -56,6 +56,8 @@ disallowedTools: Bash
     2. What Drupal version? (10, 11, CMS). What composition modules are available?
        - Paragraphs module (entity_reference_revisions): structured component embedding
        - Layout Builder (core D10+): drag-and-drop page building with blocks
+       - Experience Builder (core in Drupal CMS): next-generation page building with Canvas components, replacing Layout Builder
+       - Canvas Code Components (Drupal CMS): developer-authored components consumed by Experience Builder
        - ECK (Entity Construction Kit): lightweight custom entity types without code
        - Block Content (core): reusable block entities placed via Block Layout or Layout Builder
        - Field Group: visual grouping of fields in edit forms (not a separate entity)
@@ -123,6 +125,15 @@ disallowedTools: Bash
     - Examples: Custom block types in Layout Builder sections
     - Key: Layout Builder and Paragraphs serve similar needs — choose ONE as primary composition pattern
 
+    **Experience Builder / Canvas Component** (Drupal CMS) — Use when:
+    - Site runs Drupal CMS with Experience Builder enabled
+    - Entity is a visual component assembled via the Experience Builder page editor
+    - Components are Canvas Code Components with prop schemas and slot architecture
+    - Component needs rich editorial configuration (typed props, not just block settings)
+    - Examples: Hero sections, card grids, CTAs, interactive widgets in Drupal CMS
+    - Key: Experience Builder is the successor to Layout Builder in Drupal CMS — use it instead of Layout Builder on Drupal CMS sites
+    - For deep Canvas component architecture, use drupal-planner.canvas
+
     **Block Content** (core) — Use when:
     - Entity is a reusable content block placed in regions or Layout Builder
     - Entity is site-wide (appears in sidebar, footer, header)
@@ -139,14 +150,16 @@ disallowedTools: Bash
     - Does it need a URL? → Content type
     - Is it always inside something else? → Paragraph
     - Is it site-wide chrome (sidebar, footer)? → Block content
-    - Is the site using Layout Builder? → Layout Builder component for page building
+    - Is the site Drupal CMS with Experience Builder? → Canvas component for page building (use drupal-planner.canvas for architecture)
+    - Is the site using Layout Builder (non-CMS)? → Layout Builder component for page building
     - Is it a lightweight data record? → ECK entity
 
     **Anti-patterns to flag**:
     - Content type for something that's always embedded (should be paragraph)
     - Paragraph type that editors create standalone (should be content type)
     - Both Paragraphs AND Layout Builder for the same page-building purpose (pick one)
-    - Block content type for per-page content (should be paragraph or Layout Builder)
+    - Layout Builder on a Drupal CMS site (should use Experience Builder instead)
+    - Block content type for per-page content (should be paragraph or Layout Builder/Experience Builder)
 
     3.3 Field Architecture Strategy:
 
@@ -365,6 +378,7 @@ disallowedTools: Bash
     - content-model-critic: Review the content model after design
     - drupal-critic: Review the implementation after coding
     - drupal-planner.taxonomy: Deep taxonomy architecture (often paired with content model work)
+    - drupal-planner.canvas: Canvas Code Component architecture (components render content model entities)
     - drupal-planner.search: Search architecture (depends on content model for indexing)
   </Companion_Skills>
 

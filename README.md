@@ -43,6 +43,7 @@ It also ships focused sub-planners:
 - `/drupal-planner.content-model`
 - `/drupal-planner.taxonomy`
 - `/drupal-planner.theme`
+- `/drupal-planner.canvas`
 - `/drupal-planner.search`
 
 Use the main planner for full features or cross-cutting work. Use sub-planners when the scope is clearly limited to one subsystem.
@@ -80,6 +81,7 @@ It also activates context-driven perspectives such as Open Source Contributor, S
 - `/drupal-planner.content-model`
 - `/drupal-planner.taxonomy`
 - `/drupal-planner.theme`
+- `/drupal-planner.canvas`
 - `/drupal-planner.search`
 - `/drupal-critic`
 - `/drupal-config-executor`
@@ -134,6 +136,12 @@ cp drupal-meta-skills/.claude/agents/*.md ~/.claude/agents/
 
 ```text
 /drupal-planner.theme Plan theme architecture for a Drupal 11 site using SDC
+```
+
+### Canvas component planning
+
+```text
+/drupal-planner.canvas Plan Canvas Code Component architecture for a Drupal CMS events site
 ```
 
 ### Search planning

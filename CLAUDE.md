@@ -10,6 +10,7 @@ This repository is the consolidated public package for Zivtech's Drupal planner-
 | drupal-planner.content-model | planner | `/drupal-planner.content-model` |
 | drupal-planner.taxonomy | planner | `/drupal-planner.taxonomy` |
 | drupal-planner.theme | planner | `/drupal-planner.theme` |
+| drupal-planner.canvas | planner | `/drupal-planner.canvas` |
 | drupal-planner.search | planner | `/drupal-planner.search` |
 | drupal-critic | critic | `/drupal-critic` |
 | drupal-config-executor | executor | `/drupal-config-executor` |
