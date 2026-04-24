@@ -27,14 +27,6 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 - User is focused on taxonomy design — use `/drupal-planner.taxonomy`
 - User is focused on content model — use `/drupal-planner.content-model`
 
-## Companion_Skills
-
-- `drupal-planner`: Full Drupal implementation planning
-- `search-discovery-critic`: Review the search architecture after design
-- `drupal-critic`: Review the implementation after coding
-- `drupal-planner.taxonomy`: Taxonomy design (taxonomies power faceted search)
-- `drupal-planner.content-model`: Content model design (determines what's indexed)
-
 ## Steps
 
 1. **Identify scope**: What search/discovery architecture is being designed?
@@ -42,10 +34,3 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 3. **Route to agent**: Delegate to the drupal-search-planner agent
    - `Agent(subagent_type="drupal-planner", model="opus", prompt=<search_planning_prompt>)`
 4. **Return the plan**: Present search architecture specification
-
-## Tool_Usage
-
-- Use Read to examine existing Search API config, Views search pages, Facets configuration
-- Use Grep to find search_api index definitions, facet configurations, Views display settings
-- Use Bash to check composer.json for search_api_solr, elasticsearch_connector, facets modules
-- Write the plan to `docs/plans/`

@@ -29,14 +29,6 @@ This is a focused sub-planner of `/drupal-planner` and the companion planner to 
 - User is focused on content model or entity architecture — use `/drupal-planner.content-model`
 - User is writing Canvas component code — use their development workflow
 
-## Companion_Skills
-
-- `drupal-critic`: Reviews Canvas components using 7 Canvas-specific external skills (component-definition, component-metadata, component-utils, data-fetching, styling-conventions, component-composability, component-upload)
-- `drupal-planner`: Full Drupal implementation planning (routes here for Canvas phase)
-- `drupal-planner.theme`: Theme architecture (for SDC and traditional theming alongside Canvas)
-- `drupal-planner.content-model`: Content model design (Canvas components render content model entities)
-- `a11y-planner`: Accessibility design (for deep-dive on ARIA patterns within Canvas components)
-
 ## Steps
 
 1. **Identify scope**: What Canvas component architecture is being designed?
@@ -44,10 +36,3 @@ This is a focused sub-planner of `/drupal-planner` and the companion planner to 
 3. **Route to agent**: Delegate to the drupal-canvas-planner agent
    - `Agent(subagent_type="drupal-planner", model="opus", prompt=<canvas_planning_prompt>)`
 4. **Return the plan**: Present Canvas component architecture specification
-
-## Tool_Usage
-
-- Use Read to examine existing Canvas component files, component.yml schemas, package.json
-- Use Grep to find component definitions, prop types, data fetching patterns, slot usage
-- Use Bash to check Drupal CMS version, installed Canvas modules, component registry
-- Write the plan to `docs/plans/`

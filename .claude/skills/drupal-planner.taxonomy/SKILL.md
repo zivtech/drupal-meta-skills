@@ -27,14 +27,6 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 - User is focused on content types/entity architecture — use `/drupal-planner.content-model`
 - User is focused on search beyond taxonomy facets — use `/drupal-planner.search`
 
-## Companion_Skills
-
-- `drupal-planner`: Full Drupal implementation planning
-- `taxonomy-critic`: Review the taxonomy after design
-- `drupal-critic`: Review the implementation after coding
-- `drupal-planner.content-model`: Content model design (taxonomies attach to content types)
-- `drupal-planner.search`: Search architecture (taxonomies power faceted search)
-
 ## Steps
 
 1. **Identify scope**: What taxonomy/classification is being designed?
@@ -42,10 +34,3 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 3. **Route to agent**: Delegate to the drupal-taxonomy-planner agent
    - `Agent(subagent_type="drupal-planner", model="opus", prompt=<taxonomy_planning_prompt>)`
 4. **Return the plan**: Present taxonomy specification
-
-## Tool_Usage
-
-- Use Read to examine existing vocabularies, term reference fields, Views configurations
-- Use Grep to find taxonomy usage patterns, Views filter configurations, Pathauto patterns
-- Use Bash to check composer.json for Facets, Pathauto, Taxonomy Manager modules
-- Write the plan to `docs/plans/`

@@ -27,13 +27,6 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 - User is focused on taxonomy/classification — use `/drupal-planner.taxonomy`
 - User is focused on search/discovery — use `/drupal-planner.search`
 
-## Companion_Skills
-
-- `drupal-planner`: Full Drupal implementation planning (routes here for content model phase)
-- `content-model-critic`: Review the content model after design
-- `drupal-critic`: Review the implementation after coding
-- `drupal-planner.taxonomy`: Taxonomy design (often paired with content model work)
-
 ## Steps
 
 1. **Identify scope**: What content model is being designed or redesigned?
@@ -41,10 +34,3 @@ This is a focused sub-planner of `/drupal-planner`. Use it when the planning sco
 3. **Route to agent**: Delegate to the drupal-content-model-planner agent
    - `Agent(subagent_type="drupal-planner", model="opus", prompt=<content_model_planning_prompt>)`
 4. **Return the plan**: Present content model specification
-
-## Tool_Usage
-
-- Use Read to examine existing content types, field configs, paragraph types
-- Use Grep to find entity type definitions, field usage patterns, bundle configurations
-- Use Bash to check composer.json for Paragraphs, Layout Builder, ECK modules
-- Write the plan to `docs/plans/`

@@ -62,30 +62,6 @@ Use Drupal Planner when you need to:
 - User wants general Drupal knowledge (what's an entity? how does the cache API work?) — answer directly
 - User is just asking a question, not designing something — answer directly instead
 
-## Companion_Skills
-
-**Sub-planners (for focused subsystem planning):**
-- `drupal-planner.content-model`: Deep content model architecture
-- `drupal-planner.taxonomy`: Taxonomy and classification architecture
-- `drupal-planner.theme`: Theme and frontend architecture
-- `drupal-planner.canvas`: Canvas Code Component architecture
-- `drupal-planner.search`: Search and discovery architecture
-
-**Design phase (always use if installed):**
-- `brainstorming` (obra/superpowers): Explore multiple Drupal architectures before committing.
-- `writing-plans` (obra/superpowers): Convert the Drupal design into implementation tasks.
-
-**Code understanding:**
-- `code-archaeology` (flonat/claude-research): Understand existing Drupal modules before planning modifications.
-
-**Implementation:**
-- `test-driven-development` (obra/superpowers): TDD for Drupal with PHPUnit and Kernel tests.
-- `executing-plans` (obra/superpowers): Batch execution with checkpoints.
-
-**Verification:**
-- `drupal-critic` (drupal-critic): Harsh code review at checkpoints.
-- `drupal-coding-standards` (zivtech-claude-skills): Drupal coding standards compliance.
-
 ## Steps
 
 1. **Identify the scope**: Determine what Drupal implementation needs planning. If no arguments provided, ask the user what they want to plan.
@@ -105,33 +81,3 @@ Use Drupal Planner when you need to:
    - **Without oh-my-claudecode**: `Agent(subagent_type="drupal-planner", model="opus", prompt=<planning_prompt>)`
 
 6. **Return the plan**: Present the plan document to the user and offer execution options.
-
-## Tool_Usage
-
-- Use the Agent tool to delegate planning to a subagent with the full protocol
-- Use Read to examine existing modules, entity types, hooks, and services if modifying existing code
-- Use Grep to find patterns: entity types, bundle definitions, hook implementations, service definitions
-- Use Bash to analyze composer.json for Drupal version detection, module dependencies
-- Write the plan document to `docs/plans/` in the project
-
-## References
-
-- [Contrib Evaluation Rubric](references/contrib-evaluation-rubric.md) — Decision framework for contrib vs custom module decisions
-- [Drupal Planning Rubric](references/drupal-planning-rubric.md) — Quality checklist for planning output
-- [Sub-Planner Routing Map](references/sub-planner-routing-map.md) — Detailed routing logic for sub-planner selection
-
-## Final_Checklist
-
-- [ ] Did I understand the feature scope and risk level?
-- [ ] Did I route to the right planner (main vs sub-planner)?
-- [ ] Did I analyze existing architecture (if modifying code)?
-- [ ] Did I detect the Drupal version (7, 10, 11, CMS)?
-- [ ] Does every entity type have a one-sentence purpose and relationships documented?
-- [ ] Does every custom module justify why a contrib module doesn't solve it?
-- [ ] Does the permission model exist with role→permission→rationale mapping?
-- [ ] Does every config item have a classification (simple config vs config entity vs state)?
-- [ ] Does the cache strategy specify tags, contexts, and max-age for each cacheable item?
-- [ ] Does the migration plan (if needed) have idempotency and rollback strategy?
-- [ ] Did I plan the theme/render (templates, preprocess, accessibility)?
-- [ ] Did I break down implementation into TDD tasks with review checkpoints?
-- [ ] Did I identify drupal-critic review checkpoints at appropriate stages?
