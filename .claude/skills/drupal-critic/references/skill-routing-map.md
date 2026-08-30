@@ -58,9 +58,6 @@ Before selecting skills, match the review context against each skill's JTBD stat
   - JTBD: When CSS, design tokens, or visual conventions in Canvas components are under review, I want styling standards, so I can verify consistency with the Canvas design system.
 - `drupal-canvas/skills/canvas-component-composability`
   - JTBD: When Canvas components nest, compose, or use slots with other components, I want composability patterns, so I can verify parent-child relationships and data flow are architecturally sound.
-- `drupal-canvas/skills/canvas-component-upload`
-  - JTBD: When the review covers packaging, versioning, or deploying Canvas components to a Drupal site, I want upload workflow expertise, so I can verify the build-and-deploy pipeline handles dependencies correctly.
-
 ## Tooling and Environment
 
 - `grasmash/drupal-claude-skills/drupal-ddev`
