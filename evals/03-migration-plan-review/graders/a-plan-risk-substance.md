@@ -3,33 +3,57 @@ type: llm
 focus: last_message
 weight: 1
 ---
-This is a PLAN review, not a code review. The response must surface the concrete
-operational risks in this migration plan. It must raise at least THREE of these
-five, each tied to the plan text rather than stated as a generic caution:
+This is a PLAN review. The plan has already been written to cover the obvious
+process ground: it has a staging dry run against a production copy, a
+pre-migration database snapshot, and a named rollback command. Raising any of
+those as a gap is NOT a finding here and earns no credit — neither does generic
+advice ("test more", "allow buffer time", "add monitoring", "get sign-off").
 
-1. **Idempotency / replay.** The plan runs `migrate:import` once with no
-   statement of what happens on partial failure, a re-run, or a resumed batch.
-   A correct finding asks how the migration behaves when replayed, or names
-   migrate's highwater/track-changes/`--update` behavior.
+Credit only findings that require knowing how Drupal migrations actually
+behave. The real defects:
 
-2. **Rollback.** There is no rollback or restore path — no `migrate:rollback`,
-   no database snapshot before the run, and the run happens the night before
-   launch on production.
+1. **Reading `field_data_*` tables directly.** `field_data_body` holds only the
+   *current* revision; `field_revision_body` holds the rest. A hand-rolled
+   `SqlBase` over `field_data_*` silently drops revisions, and also loses
+   translations, field deltas, and the source text format — things the
+   `migrate_drupal` D7 source plugins (`d7_node`, `d7_field_instance`) handle.
+   A correct finding says to use the D7 source plugins rather than raw
+   `field_data_*` reads, or names revisions/translations/text format as lost.
 
-3. **Unsafe source assumption.** Step 4 maps a free-text author name to a user
-   account. A correct finding says name matching is ambiguous or lossy —
-   duplicates, missing accounts, renames — and asks what happens to rows that
-   do not resolve.
+2. **`taxonomy_index` is not a source of truth.** In D7 it is a denormalised
+   index populated for *published* nodes only. Driving term assignment from it
+   means unpublished articles arrive with no terms at all. A correct finding
+   says to read `taxonomy_index` is wrong and to use the field tables
+   (`field_data_field_tags`) or the D7 term-reference source instead, or
+   explicitly names the published-only behaviour.
 
-4. **Ambiguity in step 3.** "Taxonomy terms will be mapped automatically based
-   on name matching" is underspecified: which vocabulary, what happens to terms
-   that do not exist, case/whitespace/duplicate handling.
+3. **Creating terms ad hoc defeats the stated rollback.** Terms matched or
+   created inline get no entry in any migration map table, so
+   `drush migrate:rollback` cannot remove them and a re-run can duplicate them.
+   The correct shape is a separate terms migration plus `migration_lookup`
+   with a declared `migration_dependencies`. A finding that says the rollback
+   path is narrower than the plan claims — it only reverses rows in the
+   `legacy_articles` map table — also counts here.
 
-5. **Config-workflow risk in cutover.** Running `drush cex` on production after
-   an import and committing it risks exporting production drift, and the
-   migration config itself needs to be in code before the import, not after.
+4. **Deferring files breaks the body migration.** D7 `body_value` carries inline
+   `<img src="/sites/default/files/...">` markup and file/media references.
+   Importing articles a week before files ships 42,000 nodes with broken
+   images, and D7 files need mapping to D11 media entities, not just copying.
+   A correct finding challenges the ordering or the "separate, later" framing.
 
-PASS if at least three of the five are raised with that level of specificity.
-FAIL if the response is mostly generic project-management advice ("test in
-staging", "allow more time", "add monitoring") without naming the concrete
-defects above, or if it reviews the plan as though it were code.
+5. **`user 1` as the author fallback.** Silently attributing unmatched content
+   to the site's superuser account is both wrong attribution and a poor default
+   for a security-sensitive account; the plan gives no count of how many of the
+   42,000 rows will miss.
+
+Also acceptable as a fifth-tier credit: the `legacy` connection lives in
+`settings.php`, which is per-environment and not exportable as config, so the
+production web node must reach the old database; or that a single
+`migrate:import` of 42,000 rows needs batching / `--limit` / `--feedback`
+rather than one unbounded run.
+
+PASS if at least THREE of items 1-5 are raised with that level of specificity.
+
+FAIL if fewer than three are raised, or if the response leans on the process
+gaps the plan already closes, or if its findings would read the same for a
+non-Drupal data migration.

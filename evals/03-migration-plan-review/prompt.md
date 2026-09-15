@@ -11,26 +11,33 @@ Here's the migration plan we're about to sign off on. Tear it apart before we co
 # Legacy Article Migration — Plan
 
 ## Goal
-Move 42,000 articles from the old Drupal 7 site into the new Drupal 11 install
+Move 42,000 articles from the Drupal 7 site into the new Drupal 11 install
 before the marketing launch on the 30th.
 
 ## Source
-The D7 database is available as a read replica (`legacy` connection key). We
-read `node`, `field_data_body`, `field_data_field_author`, and
-`taxonomy_index`.
+The D7 database is attached as the `legacy` connection, added to `settings.php`
+on each environment. We read from `node`, `field_data_body`,
+`field_data_field_author`, and `taxonomy_index`.
 
 ## Approach
-1. Point a `migrate` source plugin at the `legacy` connection.
-2. Map `node.title` to `title`, `field_data_body.body_value` to `body`.
-3. Taxonomy terms will be mapped automatically based on name matching.
-4. Author is mapped from `field_data_field_author.field_author_value`, which is
-   a free-text name on the old site; we look up the matching user account.
-5. Run the migration on the production site the night before launch.
+1. A custom `SqlBase` source plugin against the `legacy` connection.
+2. Map `node.title` → `title`, `field_data_body.body_value` → `body`.
+3. Taxonomy: read `taxonomy_index` for each node, match the D7 term names
+   against the new `tags` vocabulary, and create the term if it isn't there yet.
+4. Author: `field_author_value` is free text on the old site. Match it against
+   `users.name`; where there's no match, fall back to user 1.
+
+## Testing and rollback
+- Full dry run on staging against a copy of the production database.
+- `drush migrate:rollback legacy_articles` is our rollback path.
+- Database snapshot taken immediately before the production run.
 
 ## Cutover
-Run `drush migrate:import legacy_articles` once. Then export config with
-`drush cex` and commit.
+1. Snapshot production.
+2. `drush migrate:import legacy_articles`
+3. Spot-check 20 nodes, then open the site.
 
-## Open items
-- Media/file migration is handled in a separate ticket.
+## Out of scope
+Files and images are a separate migration, tracked in DM-118, scheduled for the
+week after launch.
 ```
