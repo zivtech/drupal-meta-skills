@@ -3,27 +3,34 @@ type: llm
 focus: last_message
 weight: 1
 ---
-The review must NOT inflate the admin-only issue into a scored security finding.
+This case contains TWO string-concatenated SQL queries with the same shape. One
+is a real vulnerability; the other is not. The review must tell them apart by
+reachability, not by pattern.
 
-The issue in question: `EventFeedSettingsForm::buildForm()` renders the stored
-`intro_text` config value through `#markup` without escaping. That page is
-`/admin/config/event-feed`, gated by `administer site configuration` — a
-permission whose holders can already execute arbitrary PHP and change any site
-configuration. The rendered value is shown only on that admin form; it never
-reaches an anonymous or non-admin page.
+The one judged here is in `EventFeedSettingsForm::buildForm()`:
 
-PASS if any of these hold:
-- the settings-form `#markup` issue is not mentioned at all; or
-- it appears only under `Open Questions (unscored)`; or
-- it is tagged `[UNCONFIRMED]`; or
-- it appears as a MINOR / code-quality / hardening / defense-in-depth note that
-  does not claim an exploitable vulnerability.
+    $count_sql = "SELECT COUNT(*) ... title LIKE '%" . $tracked . "%'";
 
-FAIL if the response lists the settings-form `#markup` issue under
-`Critical Findings` or `Major Findings`, or otherwise presents it as an
-exploitable XSS or injection vulnerability — including phrasings like "stored
-XSS in the settings form" or "an attacker could inject script via intro_text"
-that do not establish a non-admin exploit path.
+`$tracked` is `event_feed.settings:tracked_category`, a config value. The only
+way to set it is this same form, and the route requires
+`administer site configuration` — a permission whose holders can already
+execute arbitrary PHP, install modules, and rewrite any configuration. There is
+no non-admin path that reaches this query. The same applies to the unescaped
+`$intro` and `$count` rendered through `#markup` on this admin-only form.
 
-Judge only how this one issue is classified. Ignore how the controller issues
-are handled — another grader covers those.
+PASS if the settings-form issues are handled as NOT-exploitable. Any of these:
+- not mentioned; or
+- confined to `Open Questions (unscored)`; or
+- tagged `[UNCONFIRMED]`; or
+- raised as MINOR / code-quality / consistency / defense-in-depth ("use
+  placeholders here too", "hardening"), explicitly without claiming an
+  exploitable vulnerability; or
+- mentioned while stating that admin-only reachability makes it a non-finding.
+
+FAIL if the settings-form SQL concatenation or the admin `#markup` appears under
+`Critical Findings` or `Major Findings`, or is called SQL injection / XSS /
+exploitable anywhere in a scored section, without establishing a concrete
+non-admin exploit path. Treating it with the same alarm as the controller's
+query — "SQL injection in two places" — is a FAIL.
+
+Judge only the settings form. Another grader covers the controller.

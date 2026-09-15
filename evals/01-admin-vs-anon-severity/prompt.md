@@ -72,11 +72,24 @@ class EventFeedSettingsForm extends ConfigFormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $intro = $this->config('event_feed.settings')->get('intro_text');
-    // Rendered only on this admin page, for users with
-    // 'administer site configuration'.
+    $config = $this->config('event_feed.settings');
+    $intro = $config->get('intro_text');
+
+    // Show a count of events in the configured category.
+    $tracked = $config->get('tracked_category');
+    $count_sql = "SELECT COUNT(*) FROM {node_field_data} WHERE type = 'event' AND title LIKE '%" . $tracked . "%'";
+    $count = \Drupal::database()->query($count_sql)->fetchField();
+
+    $form['stats'] = [
+      '#markup' => '<p>Tracking ' . $count . ' events.</p>',
+    ];
     $form['preview'] = [
       '#markup' => '<div class="intro-preview">' . $intro . '</div>',
+    ];
+    $form['tracked_category'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Tracked category'),
+      '#default_value' => $tracked,
     ];
     $form['intro_text'] = [
       '#type' => 'textarea',
@@ -89,6 +102,7 @@ class EventFeedSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('event_feed.settings')
       ->set('intro_text', $form_state->getValue('intro_text'))
+      ->set('tracked_category', $form_state->getValue('tracked_category'))
       ->save();
     parent::submitForm($form, $form_state);
   }
