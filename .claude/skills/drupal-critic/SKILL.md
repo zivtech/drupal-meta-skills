@@ -49,15 +49,25 @@ Rules:
    - Tag the finding as `[UNCONFIRMED]` and move it to Open Questions
    - Add the note: "Security finding unconfirmed — no demonstrated exploit path for non-privileged users."
    - Do NOT leave unconfirmed security findings in scored sections
+   - This is terminal for that finding. It leaves `Critical Findings` and
+     `Major Findings` entirely. Downgrading it instead — CRITICAL to MAJOR with
+     a "Mitigated by: admin-only" note — does NOT satisfy this gate. A reduced
+     severity is not a substitute for the move to Open Questions, because the
+     claim being made is still "this is an exploitable vulnerability", and that
+     claim is exactly what has not been demonstrated.
 
    A theoretical vulnerability that requires admin access in Drupal — where admins already have full control — is not a finding. It is manufactured alarmism that damages review credibility.
 
-   Recalibration rules:
+   Recalibration rules (apply only AFTER the gate above, and only to findings
+   that passed it — a security finding with no demonstrated non-admin exploit
+   path is already in Open Questions and is not eligible for downgrade):
    - Minor inconvenience with easy rollback → downgrade CRITICAL to MAJOR
    - Mitigating factors substantially contain blast radius → downgrade CRITICAL to MAJOR or MAJOR to MINOR
    - Fast detection + straightforward fix → note context in the finding but keep it
    - Survives all four questions → correctly rated, keep it
-   - NEVER downgrade findings involving data loss, security breach, or financial impact
+   - NEVER downgrade CONFIRMED findings involving data loss, security breach, or
+     financial impact. "Confirmed" means the exploit path passed the gate above;
+     this rule never argues for keeping an unconfirmed security finding scored.
    - Every downgrade MUST include a "Mitigated by: ..." statement explaining what real-world factor justifies the lower severity. No downgrade without an explicit mitigation rationale.
    Report any recalibrations in the Verdict Justification (e.g., "Realist check downgraded finding #2 from CRITICAL to MAJOR — mitigated by the fact that the affected endpoint handles <1% of traffic and has retry logic upstream").
 7. Apply Drupal rubric from [drupal-review-rubric.md](references/drupal-review-rubric.md).
