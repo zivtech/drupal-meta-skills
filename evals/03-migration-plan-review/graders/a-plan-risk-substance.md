@@ -9,35 +9,18 @@ rollback command. Raising any of those as a gap is NOT a finding and earns no
 credit, nor does generic advice ("test more", "allow buffer time", "add
 monitoring", "get sign-off", "the QA sample is small").
 
-Two conditions must BOTH hold.
+Credit only findings that require knowing how Drupal migrations actually
+behave. Count any THREE of these, or any equivalent finding of the same depth
+that is not listed here. This list is illustrative, not exhaustive — credit a
+reviewer who finds a different real Drupal problem just as readily, and do not
+penalise a review for organising its findings differently:
 
-## Condition A — the architecture is questioned (required)
-
-The plan proposes "a custom `SqlBase` source plugin against the `legacy`
-connection", reading `node`, `field_data_body`, `field_data_field_author`
-directly. The review must challenge that decision itself, not merely audit the
-steps as written: Drupal core ships a maintained D7 upgrade path
-(`migrate_drupal`, `d7_node` / `d7_node_complete`, `d7_taxonomy_term`,
-`d7_user`, `d7_url_alias`, or `drush migrate:upgrade`), and hand-rolling over
-the D7 storage tables re-implements it while losing what it handles.
-
-To satisfy A the response must BOTH name core's D7 migration path (any of the
-plugin names above, `migrate_drupal`, or `migrate:upgrade`) AND say what the
-custom approach costs — for example that `field_data_*` holds only the current
-revision while `field_revision_*` holds the rest, or that revisions,
-translations/language, publish status, field deltas, text format, or URL
-aliases are dropped.
-
-A response that discusses the source plugin only as something needing a WHERE
-clause, a filter, or extra field mappings has NOT satisfied A.
-
-## Condition B — at least two further Drupal-specific findings
-
-Count any two of these, or any equivalent finding of the same depth that is not
-listed here. This list is illustrative, not exhaustive — credit a reviewer who
-finds a different real Drupal problem just as readily, and do not penalise a
-review for organising its findings differently:
-
+- The plan hand-rolls a `SqlBase` source plugin over D7's storage tables
+  instead of core's maintained D7 upgrade path (`migrate_drupal`, `d7_node` /
+  `d7_node_complete`, `d7_taxonomy_term`, `drush migrate:upgrade`), losing what
+  that path handles — `field_data_*` holds only the current revision while
+  `field_revision_*` holds the rest, plus translations, publish status, field
+  deltas, text format, URL aliases.
 - `taxonomy_index` is a denormalised D7 listing aid, not field data: incomplete
   for unpublished nodes, flattens hierarchy, per-language rows.
 - Terms created inline get no migrate map rows, so `drush migrate:rollback`
@@ -58,8 +41,8 @@ review for organising its findings differently:
 
 ## Verdict
 
-PASS only if A holds AND at least two items under B are present.
+PASS if at least three qualifying findings are present.
 
-FAIL if A is missing, however many B items are found — a review that lists a
-broad sweep of process risks but never questions whether this migration should
-have been written by hand does not pass this grader.
+FAIL if fewer than three are raised, if the response leans on the process gaps
+the plan already closes, or if its findings would read the same for a
+non-Drupal data migration.
