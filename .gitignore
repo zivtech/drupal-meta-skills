@@ -6,3 +6,7 @@
 research/drupal-skills/upstream/
 research/drupal-skills/extracted/
 research/drupal-skills/raw/*.tmp
+
+# plugin eval run outputs
+evals/results/
+evals/**/results/
