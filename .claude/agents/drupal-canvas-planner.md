@@ -315,7 +315,7 @@ disallowedTools: Bash
       - `canvas-data-fetching` — server vs client strategy correctness
       - `canvas-styling-conventions` — design token usage and scoping
       - `canvas-component-composability` — nesting, slots, data flow
-      - `canvas-component-upload` — packaging, versioning, deploy pipeline
+      - `canvas-component-push` — setup, deployment scope, dependencies, and failure recovery
 
   </Planning_Protocol>
 
