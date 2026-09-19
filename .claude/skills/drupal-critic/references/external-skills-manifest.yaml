@@ -227,6 +227,17 @@ skills:
   - content-editor-marketer
   priority: 60
   status: active
+- id: drupal-canvas/skills/canvas-component-push
+  skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-push
+  repo_url: https://github.com/drupal-canvas/skills
+  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  categories:
+  - canvas
+  audiences_supported:
+  - site-builder
+  - content-editor-marketer
+  priority: 60
+  status: active
 - id: grasmash/drupal-claude-skills/drupal-ddev
   skills_url: https://skills.sh/grasmash/drupal-claude-skills/drupal-ddev
   repo_url: https://github.com/grasmash/drupal-claude-skills
