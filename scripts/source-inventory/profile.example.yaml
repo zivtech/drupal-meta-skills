@@ -1,0 +1,80 @@
+# drupal-source-inventory profile — example / template.
+#
+# Copy this file OUTSIDE this repo for a real project (it will contain
+# project paths, and possibly a docker container name, that don't belong in
+# a public repo). Nothing in scripts/source-inventory/*.py may hardcode a
+# project fact; every project-specific value lives here.
+
+# Free-text project identifier. Never a client-identifying domain in
+# anything that gets committed publicly.
+project: example-parks-district
+
+config:
+  # Absolute path to the exported Drupal config directory
+  # (config.sync.directory, or a config/install directory).
+  dir: /path/to/project/config
+
+# Theme source, used by the render-signals extractor to find Twig
+# templates and (for placements) to read the active theme's declared
+# regions from its *.info.yml.
+theme:
+  dir: /path/to/project/web/themes/custom/project_theme
+
+db:
+  # EITHER set docker_container (queries run via `timeout <n> docker exec
+  # <container> mysql ...`) OR leave it unset and provide connection env
+  # vars below (queries run via a local `mysql` client, still wrapped in
+  # `timeout`).
+  docker_container: null
+  database: project_db
+  # Env var NAMES to read at run time (not values — nothing here is a
+  # credential). Defaults shown.
+  host_env: DB_HOST
+  port_env: DB_PORT
+  user_env: DB_USER
+  password_env: DB_PASSWORD
+  database_env: DB_NAME
+  timeout_seconds: 30
+
+domains:
+  # Enabled site/domain machine names (e.g. Domain Access target ids).
+  # Leave empty ([]) for a single-site project.
+  enabled: []
+  # The field (on `node`) that carries domain/site ownership, e.g.
+  # field_domain_access. Used generically — no domain name is ever
+  # hardcoded in the extractor scripts themselves.
+  ownership_field: field_domain_access
+  # Optional: a field recording which domain "owns" (authored) a node,
+  # distinct from which domains it's visible on.
+  source_field: field_domain_source
+
+pii:
+  # Sample field values are OFF by default. Turn on deliberately, and only
+  # for output that will stay private — even scrubbed samples are content
+  # from the live source.
+  samples: false
+  # Tables never queried for sample VALUES (a bare COUNT(*) against one of
+  # these, e.g. webform submission counts, is still fine — this denylist
+  # is about content, not aggregate counts). Extend per-project; this list
+  # is added to (not replacing) the skill's built-in defaults.
+  table_denylist:
+    - users_field_data
+    - "webform_submission*"
+    - sessions
+    - watchdog
+  max_sample_len: 80
+
+render_signals:
+  # PHP files containing a `switch ($variables['paragraph']->bundle()) {
+  # case '...': }`-shaped preprocess hook. Relative paths resolve against
+  # this profile file's directory.
+  preprocess_files:
+    - web/themes/custom/project_theme/project_theme.theme
+    - web/modules/custom/project_events/project_events.module
+  # Path to a per-project authored overlay (see render-verdicts.example.yaml
+  # in this directory) that turns extracted signals into confirmed
+  # render_behavior. Optional — omit to run signals-only.
+  overlay_path: render-verdicts.yaml
+
+output:
+  dir: ./inventory/generalized

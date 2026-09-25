@@ -1,0 +1,7 @@
+bundle: program_page
+field_name: field_topic
+label: Topic
+settings:
+  handler_settings:
+    target_bundles:
+      program_topics: program_topics

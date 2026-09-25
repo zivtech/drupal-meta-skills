@@ -1,0 +1,13 @@
+bundle: program_page
+field_name: field_content
+label: Content
+required: false
+settings:
+  handler_settings:
+    target_bundles:
+      hero_banner: hero_banner
+      faq_accordion_row: faq_accordion_row
+      upcoming_sessions: upcoming_sessions
+      fee_schedule: fee_schedule
+      photo_showcase: photo_showcase
+      orphaned_widget: orphaned_widget

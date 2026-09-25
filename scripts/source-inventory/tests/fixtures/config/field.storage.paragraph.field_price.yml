@@ -1,0 +1,5 @@
+field_name: field_price
+type: decimal
+cardinality: 1
+settings: {}
+module: core

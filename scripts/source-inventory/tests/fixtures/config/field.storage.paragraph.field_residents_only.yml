@@ -1,0 +1,5 @@
+field_name: field_residents_only
+type: boolean
+cardinality: 1
+settings: {}
+module: core

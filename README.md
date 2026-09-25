@@ -75,6 +75,10 @@ It also activates context-driven perspectives such as Open Source Contributor, S
 - taxonomy structures
 - Search API and facet configuration
 
+### `drupal-source-inventory`
+
+`drupal-source-inventory` is a Bash-capable, read-only executor that inventories a live Drupal source (exported config + database + theme) before a migration or conversion plan is allowed to touch it. It produces `source-structure.json`, validated against the target-agnostic contract in [`contracts/source-structure/`](contracts/source-structure/README.md): every node bundle, paragraph type, block type, placement, menu, webform, library item, state key, and Views listing, with field-level data quality (fill rate, duplication, suspected PII) and evidence-backed render behavior (a static Twig/preprocess scanner, not a guess). It does not decide what happens to any of it — that's a human-authored `dispositions.json`, consumed by the migration/content-model planners downstream.
+
 ## Commands
 
 - `/drupal-planner`
@@ -85,6 +89,7 @@ It also activates context-driven perspectives such as Open Source Contributor, S
 - `/drupal-planner.search`
 - `/drupal-critic`
 - `/drupal-config-executor`
+- `/drupal-source-inventory`
 
 ## How the workflow fits together
 
@@ -162,12 +167,19 @@ cp drupal-meta-skills/.claude/agents/*.md ~/.claude/agents/
 /drupal-config-executor Generate config YAML from this drupal-planner.content-model spec
 ```
 
+### Source inventory before a migration
+
+```text
+/drupal-source-inventory Inventory this Drupal site's paragraphs, blocks, and placements before we plan the migration
+```
+
 ## Repository Layout
 
 ```text
 .claude/
   agents/
   skills/
+contracts/
 docs/
 research/
 scripts/

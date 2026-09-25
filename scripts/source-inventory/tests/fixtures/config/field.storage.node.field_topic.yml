@@ -1,0 +1,6 @@
+field_name: field_topic
+type: entity_reference
+cardinality: 1
+settings:
+  target_type: taxonomy_term
+module: core

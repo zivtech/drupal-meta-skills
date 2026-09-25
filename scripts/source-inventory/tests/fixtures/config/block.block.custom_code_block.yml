@@ -1,0 +1,7 @@
+id: custom_code_block
+theme: parks_fixture_theme
+region: sidebar_first
+weight: 1
+status: true
+plugin: views_block:session_calendar-block_1
+visibility: {}

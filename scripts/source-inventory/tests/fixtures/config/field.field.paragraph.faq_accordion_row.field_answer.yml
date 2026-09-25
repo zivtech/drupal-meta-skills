@@ -1,0 +1,4 @@
+bundle: faq_accordion_row
+field_name: field_answer
+label: Answer
+required: true

@@ -1,0 +1,13 @@
+id: footer_social_main
+theme: parks_fixture_theme
+region: footer
+weight: 0
+status: true
+plugin: block_content:11111111-1111-1111-1111-111111111111
+visibility:
+  domain:
+    id: domain
+    domains:
+      central: central
+      aquatics: aquatics
+    negate: false

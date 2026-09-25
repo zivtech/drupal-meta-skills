@@ -1,0 +1,4 @@
+bundle: faq_accordion_row
+field_name: field_price
+label: Price
+required: false
