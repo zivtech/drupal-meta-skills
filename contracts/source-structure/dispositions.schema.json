@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://zivtech.github.io/drupal-meta-skills/contracts/source-structure/dispositions.schema.json",
+  "title": "dispositions",
+  "description": "Human-authored disposition decisions for a source-structure.json. Promotes the pilot run's paragraph-map schema verbatim (verdicts + shape), generalized from paragraph-only to every component kind. Target-agnostic: destinations are free-text; the WP/Drupal destination-prefix grammar is runtime-side (see README.md).",
+  "type": "object",
+  "required": ["contract_version", "project", "source_structure_hash", "counts", "types"],
+  "additionalProperties": true,
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "project": { "type": "string", "minLength": 1 },
+    "source_structure_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of the paired source-structure.json (canonical JSON: sorted keys, no extra whitespace). A mismatch means this file is stale relative to a regenerated inventory."
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "counts": {
+      "type": "object",
+      "required": ["total"],
+      "additionalProperties": { "type": "integer", "minimum": 0 },
+      "properties": {
+        "STRUCTURED": { "type": "integer", "minimum": 0 },
+        "QUERY": { "type": "integer", "minimum": 0 },
+        "REUSE": { "type": "integer", "minimum": 0 },
+        "LAYOUT": { "type": "integer", "minimum": 0 },
+        "CONTENT": { "type": "integer", "minimum": 0 },
+        "DROP": { "type": "integer", "minimum": 0 },
+        "DEFER": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "types": {
+      "type": "object",
+      "description": "Keyed by component KEY (`{kind}:{id}`, matching a components[].key in the paired source-structure.json) -- NEVER by bare id. Verified against a live source: component ids are only unique WITHIN a kind (paragraphs_library_item and block_content share MySQL's auto-increment integer id space; a placement and a menu can share a machine name). One entry per inventoried component (Gate G1).",
+      "additionalProperties": { "$ref": "#/definitions/dispositionRow" }
+    }
+  },
+  "definitions": {
+    "verdict": {
+      "type": "string",
+      "enum": ["STRUCTURED", "QUERY", "REUSE", "LAYOUT", "CONTENT", "DROP", "DEFER"]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "node_bundle",
+        "paragraph_type",
+        "paragraphs_library_item",
+        "block_content_type",
+        "block_content",
+        "placement",
+        "code_plugin",
+        "menu",
+        "menu_attachment",
+        "view_listing",
+        "state_setting",
+        "webform",
+        "layout_builder",
+        "template_hardcoded"
+      ]
+    },
+    "fieldDisposition": {
+      "type": "object",
+      "required": ["destination"],
+      "additionalProperties": true,
+      "properties": {
+        "destination": {
+          "type": "string",
+          "description": "Free-text, target-side destination expression. Grammar is runtime-side, not validated here. Use 'dropped' literally when this field is not migrated."
+        },
+        "note": { "type": "string" },
+        "fill_rate_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "conditionalVerdict": {
+      "type": "object",
+      "required": ["when", "verdict"],
+      "additionalProperties": true,
+      "properties": {
+        "when": {
+          "type": "string",
+          "description": "Free-text condition describing which instances of this component this branch applies to, e.g. 'field_price is non-empty'."
+        },
+        "verdict": { "$ref": "#/definitions/verdict" },
+        "destinations": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": "string" }
+      }
+    },
+    "dispositionRow": {
+      "type": "object",
+      "required": ["kind", "verdict"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": { "$ref": "#/definitions/kind" },
+        "label": { "type": "string" },
+        "verdict": { "$ref": "#/definitions/verdict" },
+        "conditional_verdicts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/conditionalVerdict" }
+        },
+        "destinations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Required to be non-empty when verdict is not DROP and not DEFER (see the 'destinations required' rule enforced by validate_dispositions.py — a schema alone cannot express a conditional-required list in a way jsonschema draft-07 can evaluate cleanly across drafts, so this half of the rule is enforced in code, matching Gate G4's spirit one layer up from the runtime's own empty-destination check)."
+        },
+        "dropped_fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Field machine names explicitly not carried forward, even though the component itself is not DROP."
+        },
+        "note": { "type": "string" },
+        "evidence": { "type": "string" },
+        "role_source": { "type": "string", "enum": ["heuristic", "reviewed"] },
+        "render_source": { "type": "string", "enum": ["extracted", "authored", "none"] },
+        "fields": {
+          "type": "object",
+          "description": "Per-field destination, keyed by field machine name.",
+          "additionalProperties": { "$ref": "#/definitions/fieldDisposition" }
+        },
+        "pending_wiring": {
+          "type": "boolean",
+          "description": "True when this row is dispositioned but the converter does not yet implement it. Distinguishes 'decided, not yet wired' from 'undispositioned' (Gate G1). Runtime treats this as a counted fallback in lab mode and rejects it under --strict; this contract only records the flag."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "contract_version": "1.2.0",
+  "project": "example-parks-district",
+  "source_structure_hash": "b18e1aa0fac2867a4b5629186fc4bcbf516c699c8b9914903e11661a4cd013c7",
+  "generated_at": "2026-09-24T00:05:00Z",
+  "counts": {
+    "STRUCTURED": 5,
+    "CONTENT": 2,
+    "LAYOUT": 3,
+    "QUERY": 2,
+    "DROP": 3,
+    "REUSE": 1,
+    "DEFER": 1,
+    "total": 17
+  },
+  "types": {
+    "node_bundle:program_page": {
+      "kind": "node_bundle",
+      "label": "Program Page",
+      "verdict": "STRUCTURED",
+      "destinations": [
+        "post_type:program"
+      ],
+      "role_source": "reviewed"
+    },
+    "paragraph_type:faq_accordion_row": {
+      "kind": "paragraph_type",
+      "label": "FAQ Accordion Row",
+      "verdict": "CONTENT",
+      "destinations": [
+        "block:core/accordion-item"
+      ],
+      "conditional_verdicts": [
+        {
+          "when": "field_price is non-empty",
+          "verdict": "STRUCTURED",
+          "destinations": [
+            "meta:price_tier"
+          ],
+          "note": "12% of rows carry a real price and become a pricing/tier construct."
+        }
+      ],
+      "note": "88% plain FAQ prose; see conditional_verdicts for the pricing-row split.",
+      "role_source": "reviewed",
+      "render_source": "authored"
+    },
+    "paragraph_type:hero_banner": {
+      "kind": "paragraph_type",
+      "label": "Hero Banner",
+      "verdict": "LAYOUT",
+      "destinations": [
+        "pattern:hero"
+      ],
+      "role_source": "reviewed",
+      "render_source": "extracted"
+    },
+    "paragraph_type:upcoming_sessions": {
+      "kind": "paragraph_type",
+      "label": "Upcoming Sessions",
+      "verdict": "QUERY",
+      "destinations": [
+        "pattern:query-loop"
+      ],
+      "role_source": "reviewed",
+      "render_source": "extracted"
+    },
+    "paragraph_type:legacy_promo": {
+      "kind": "paragraph_type",
+      "label": "Legacy Promo",
+      "verdict": "DROP",
+      "note": "0 live instances (dead type).",
+      "role_source": "reviewed"
+    },
+    "paragraph_type:fee_schedule": {
+      "kind": "paragraph_type",
+      "label": "Fee Schedule",
+      "verdict": "CONTENT",
+      "destinations": [
+        "dropped"
+      ],
+      "dropped_fields": [],
+      "note": "Hardcoded template fees, 0 configured fields; content authored directly in the destination instead.",
+      "render_source": "extracted"
+    },
+    "paragraph_type:gallery_item": {
+      "kind": "paragraph_type",
+      "label": "Gallery Item",
+      "verdict": "LAYOUT",
+      "destinations": [
+        "block:core/gallery-item"
+      ],
+      "note": "IEF-only child of photo_showcase; own_fields_only.",
+      "role_source": "reviewed"
+    },
+    "paragraphs_library_item:shared_closure_notice": {
+      "kind": "paragraphs_library_item",
+      "label": "Shared Closure Notice",
+      "verdict": "REUSE",
+      "destinations": [
+        "pattern:synced"
+      ],
+      "note": "3 hosts share this library item by design."
+    },
+    "block_content_type:footer_social": {
+      "kind": "block_content_type",
+      "label": "Footer Social Links",
+      "verdict": "STRUCTURED",
+      "destinations": [
+        "option:social_links"
+      ],
+      "role_source": "reviewed"
+    },
+    "block_content:footer_social_main": {
+      "kind": "block_content",
+      "label": "Footer Social (main)",
+      "verdict": "STRUCTURED",
+      "destinations": [
+        "option:social_links"
+      ]
+    },
+    "placement:footer_social_main_placement": {
+      "kind": "placement",
+      "label": "Footer Social (main) placement",
+      "verdict": "LAYOUT",
+      "destinations": [
+        "pattern:footer-widget-area"
+      ]
+    },
+    "menu:main_navigation": {
+      "kind": "menu",
+      "label": "Main Navigation",
+      "verdict": "STRUCTURED",
+      "destinations": [
+        "menu:primary"
+      ]
+    },
+    "menu_attachment:main_navigation_dropdown_extra": {
+      "kind": "menu_attachment",
+      "label": "Main Navigation: dropdown-attached block link",
+      "verdict": "DEFER",
+      "note": "Pending decision on whether the destination menu system supports attached dropdown content; owner: platform team, target: next planning cycle."
+    },
+    "webform:contact_us": {
+      "kind": "webform",
+      "label": "Contact Us",
+      "verdict": "STRUCTURED",
+      "destinations": [
+        "form:contact"
+      ]
+    },
+    "state_setting:example_parks.maintenance_mode": {
+      "kind": "state_setting",
+      "label": "example_parks.maintenance_mode",
+      "verdict": "DROP",
+      "note": "Operational flag, not content; recreate at the destination ops layer if needed."
+    },
+    "view_listing:session_calendar": {
+      "kind": "view_listing",
+      "label": "Session Calendar",
+      "verdict": "QUERY",
+      "destinations": [
+        "pattern:query-loop"
+      ]
+    }
+  }
+}
