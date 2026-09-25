@@ -1,0 +1,37 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "drupal-meta-skills",
+  "version": "0.1.0",
+  "description": "Drupal planner-critic-executor bundle: architecture planning, deterministic config YAML generation, and Drupal-specific review.",
+  "author": {
+    "name": "Zivtech",
+    "url": "https://www.zivtech.com"
+  },
+  "homepage": "https://github.com/zivtech/drupal-meta-skills",
+  "repository": "https://github.com/zivtech/drupal-meta-skills",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "drupal",
+    "planner",
+    "critic",
+    "executor",
+    "code-review",
+    "architecture"
+  ],
+  "skills": [
+    "./.claude/skills"
+  ],
+  "agents": [
+    "./.claude/agents/drupal-canvas-planner.md",
+    "./.claude/agents/drupal-config-executor.md",
+    "./.claude/agents/drupal-content-model-planner.md",
+    "./.claude/agents/drupal-critic.md",
+    "./.claude/agents/drupal-planner.md",
+    "./.claude/agents/drupal-search-planner.md",
+    "./.claude/agents/drupal-taxonomy-planner.md",
+    "./.claude/agents/drupal-theme-planner.md"
+  ],
+  "experimental": {
+    "evals": "evals"
+  }
+}
