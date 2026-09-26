@@ -11,6 +11,7 @@ Supply chain safety features:
 import argparse
 import hashlib
 import re
+import ssl
 import subprocess
 import urllib.request
 import urllib.error
@@ -53,6 +54,23 @@ SUSPICIOUS_PATTERNS = [
 ]
 
 
+class FetchError(RuntimeError):
+    """A fetch failed for a reason other than the file not existing."""
+
+
+def build_ssl_context() -> ssl.SSLContext:
+    """Return an SSL context, preferring certifi's CA bundle when installed.
+
+    python.org macOS builds have no CA bundle until 'Install Certificates.command'
+    is run, so every HTTPS fetch fails verification. certifi covers that case.
+    """
+    try:
+        import certifi
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def get_head_sha(repo_url: str) -> str:
     url = repo_url + '.git' if not repo_url.endswith('.git') else repo_url
     out = subprocess.check_output(['git', 'ls-remote', url, 'HEAD'], text=True)
@@ -77,13 +95,18 @@ def fetch_skill_content(repo_url: str, commit: str, skill_id: str) -> str | None
         f'skills/drupal/{skill_name}/SKILL.md',
         f'skills/drupal/cache/{skill_name}/SKILL.md',
     ]
+    context = build_ssl_context()
     for path in paths:
         url = f'https://raw.githubusercontent.com/{owner_repo}/{commit}/{path}'
         try:
-            resp = urllib.request.urlopen(url, timeout=15)
+            resp = urllib.request.urlopen(url, timeout=15, context=context)
             return resp.read().decode('utf-8', errors='replace')
-        except (urllib.error.HTTPError, urllib.error.URLError):
-            continue
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                continue
+            raise FetchError(f'{url}: HTTP {exc.code}') from exc
+        except urllib.error.URLError as exc:
+            raise FetchError(f'{url}: {exc.reason}') from exc
     return None
 
 
@@ -126,7 +149,15 @@ def main() -> int:
     if changed and not args.no_scan:
         print(f"Scanning {len(changed)} changed skills for suspicious content...")
         for entry in changed:
-            content = fetch_skill_content(entry['repo_url'], entry['new'], entry['id'])
+            try:
+                content = fetch_skill_content(entry['repo_url'], entry['new'], entry['id'])
+            except FetchError as exc:
+                raise SystemExit(
+                    f"Could not fetch {entry['id']} for scanning: {exc}\n"
+                    "Network or TLS failure, not a missing file. On a python.org macOS "
+                    "build, run 'pip install certifi' or the bundled "
+                    "'Install Certificates.command'."
+                ) from exc
             if content:
                 warnings = scan_content(content, entry['id'])
                 scan_warnings.extend(warnings)
