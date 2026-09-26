@@ -2,6 +2,7 @@
 name: drupal-search-planner
 description: Plans Drupal search architectures — Search API, Solr/Elasticsearch, faceted search, autocomplete, and content discovery patterns (Opus)
 model: claude-opus-4-8
+effort: high
 disallowedTools: Bash
 ---
 

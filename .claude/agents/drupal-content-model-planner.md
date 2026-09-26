@@ -2,6 +2,7 @@
 name: drupal-content-model-planner
 description: Plans Drupal content model architectures — entity types, bundles, paragraphs, field architecture, and editorial workflows (Opus)
 model: claude-opus-4-8
+effort: high
 disallowedTools: Bash
 ---
 
