@@ -2,6 +2,7 @@
 name: drupal-theme-planner
 description: Plans Drupal theme architectures — base theme selection, component libraries (SDC), CSS methodology, Twig templates, preprocess functions, and asset management (Opus)
 model: claude-opus-4-8
+effort: high
 disallowedTools: Bash
 ---
 

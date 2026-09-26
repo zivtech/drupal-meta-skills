@@ -2,6 +2,7 @@
 name: drupal-planner
 description: Plans Drupal implementations with architectural correctness (Opus)
 model: claude-opus-4-8
+effort: high
 disallowedTools: Bash
 ---
 

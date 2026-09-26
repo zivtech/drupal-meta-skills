@@ -2,6 +2,7 @@
 name: drupal-taxonomy-planner
 description: Plans Drupal taxonomy architectures — vocabularies, term hierarchies, faceted navigation, and Drupal-specific classification patterns (Opus)
 model: claude-opus-4-8
+effort: high
 disallowedTools: Bash
 ---
 
