@@ -1,0 +1,5 @@
+field_name: field_image
+type: image
+cardinality: 1
+settings: {}
+module: image

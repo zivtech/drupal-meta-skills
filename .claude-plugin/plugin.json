@@ -28,6 +28,7 @@
     "./.claude/agents/drupal-critic.md",
     "./.claude/agents/drupal-planner.md",
     "./.claude/agents/drupal-search-planner.md",
+    "./.claude/agents/drupal-source-inventory.md",
     "./.claude/agents/drupal-taxonomy-planner.md",
     "./.claude/agents/drupal-theme-planner.md"
   ],

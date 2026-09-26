@@ -1,0 +1,419 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://zivtech.github.io/drupal-meta-skills/contracts/source-structure/source-structure.schema.json",
+  "title": "source-structure",
+  "description": "Machine-generated CMS source inventory. See README.md for the rubric this shape promotes (field roles, component kinds, render-source distinction). Target-agnostic: no WP- or Drupal-destination vocabulary here.",
+  "type": "object",
+  "required": ["contract_version", "project", "generated_at", "counts", "components"],
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Must match this contract's VERSION file. A major-version mismatch must be rejected by consumers."
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Project/site identifier. Never a client-identifying domain in the public fixtures shipped in this repo."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "profile": {
+      "type": "string",
+      "description": "Name or path of the profile YAML used to generate this file (provenance only, not re-validated here)."
+    },
+    "generator": {
+      "type": "object",
+      "description": "Provenance of the tool that produced this file.",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "samples_enabled": {
+      "type": "boolean",
+      "description": "Whether --samples was on for this run. When false, every field's sample_values must be empty."
+    },
+    "data_quality": {
+      "type": "object",
+      "description": "Metrics about the reliability of the extraction itself, as opposed to the source content. Currently covers parent-chain resolution: some CMSes (verified on a live Drupal source, see README 'Data quality: parent-chain resolution') keep a denormalized parent pointer on revisionable child entities that is not reliably updated when the entity is detached from that parent. Usage/host counts in this file are always computed from the live reference field tables, never from a denormalized parent pointer; this block records how often the two disagreed, as a signal for how much to trust the source's own denormalized data elsewhere.",
+      "additionalProperties": false,
+      "properties": {
+        "parent_chain": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "How parent/host relationships were actually resolved, e.g. 'entity_reference_revisions field tables (target_id/target_revision_id), not the denormalized parent_id column'."
+            },
+            "total_child_rows": { "type": "integer", "minimum": 0 },
+            "stale_denormalized_parent_rows": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Rows where the denormalized parent pointer (when present in the source) disagreed with the live reference field tables."
+            },
+            "stale_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "description": "Quick reconciliation counts by kind, plus total. Must equal the tally of components[] by kind.",
+      "required": ["total"],
+      "additionalProperties": { "type": "integer", "minimum": 0 },
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "components": {
+      "type": "array",
+      "description": "The canonical, disposition-relevant roll call. Every entry here must have exactly one row in a paired dispositions.json (Gate G1).",
+      "items": { "$ref": "#/definitions/component" }
+    },
+    "library_items": {
+      "type": "array",
+      "description": "Detail for components of kind paragraphs_library_item: which hosts reference each saved library item.",
+      "items": { "$ref": "#/definitions/libraryItem" }
+    },
+    "webforms": {
+      "type": "array",
+      "description": "Detail for components of kind webform: handlers and submission counts (counts only, never submission content — see PII rules in the skill README).",
+      "items": { "$ref": "#/definitions/webform" }
+    },
+    "vocabularies": {
+      "type": "array",
+      "description": "Taxonomy vocabularies: per-bundle and per-field attachment, plus term-ID hits found in views/theme/module code.",
+      "items": { "$ref": "#/definitions/vocabulary" }
+    },
+    "state_keys": {
+      "type": "array",
+      "description": "State API keys. Keys and metadata only, never values (PII rule).",
+      "items": { "$ref": "#/definitions/stateKey" }
+    },
+    "domains": {
+      "type": "object",
+      "description": "Multi-site/domain-access summary. Generic: the profile supplies which field is the ownership field and which domains are enabled; no domain name is hardcoded by this schema.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled_domains": { "type": "array", "items": { "type": "string" } },
+        "ownership_field": { "type": "string" },
+        "per_component_domain_fill": {
+          "type": "object",
+          "description": "component id -> {domain -> count}",
+          "additionalProperties": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+        }
+      }
+    },
+    "placements": {
+      "type": "array",
+      "description": "Detail for components of kind placement: theme/region/visibility decode.",
+      "items": { "$ref": "#/definitions/placement" }
+    },
+    "menus": {
+      "type": "array",
+      "description": "Detail for components of kind menu: link counts and menu_attachment cross-references.",
+      "items": { "$ref": "#/definitions/menu" }
+    }
+  },
+  "definitions": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "node_bundle",
+        "paragraph_type",
+        "paragraphs_library_item",
+        "block_content_type",
+        "block_content",
+        "placement",
+        "code_plugin",
+        "menu",
+        "menu_attachment",
+        "view_listing",
+        "state_setting",
+        "webform",
+        "layout_builder",
+        "template_hardcoded"
+      ]
+    },
+    "roleSource": { "type": "string", "enum": ["heuristic", "reviewed"] },
+    "renderSource": { "type": "string", "enum": ["extracted", "authored", "none"] },
+    "field": {
+      "type": "object",
+      "required": ["name", "field_type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "label": { "type": ["string", "null"] },
+        "field_type": { "type": "string" },
+        "cardinality": { "type": ["integer", "null"] },
+        "required": { "type": ["boolean", "null"] },
+        "role": {
+          "type": ["string", "null"],
+          "enum": ["FACT", "REF", "PROSE", "MEDIA", "PRESENTATION", "CONFIG", null]
+        },
+        "role_source": { "$ref": "#/definitions/roleSource" },
+        "target_entity_type": { "type": ["string", "null"] },
+        "target_bundles": { "type": ["array", "null"], "items": { "type": "string" } },
+        "allowed_values": {},
+        "fill_rate_pct": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "non_empty_instances": { "type": ["integer", "null"], "minimum": 0 },
+        "sample_values": {
+          "type": "array",
+          "description": "Empty unless samples_enabled=true. Even then, scrubbed per the skill's PII rules.",
+          "items": { "type": "string" }
+        },
+        "personal_data_suspected": { "type": ["boolean", "null"] }
+      }
+    },
+    "renderSignal": {
+      "type": "object",
+      "required": ["signal_type", "file", "line"],
+      "additionalProperties": false,
+      "properties": {
+        "signal_type": {
+          "type": "string",
+          "enum": ["view_embed", "entity_query", "state_read", "config_read", "service_call", "hardcoded_literal"]
+        },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "snippet": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "renderBehavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "own_fields_only": { "type": ["boolean", "null"] },
+        "queries_other_content": { "type": ["boolean", "null"] },
+        "global_settings_or_state": { "type": ["boolean", "null"] },
+        "hardcoded_content": { "type": ["boolean", "null"] }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total_instances": { "type": "integer", "minimum": 0 },
+        "published_hosts": { "type": "integer", "minimum": 0 },
+        "unpublished_hosts": { "type": "integer", "minimum": 0 },
+        "library_owned_instances": { "type": "integer", "minimum": 0 },
+        "unresolved_instances": { "type": "integer", "minimum": 0 },
+        "distinct_host_count": { "type": "integer", "minimum": 0 },
+        "domain_owned_hosts": {
+          "type": "object",
+          "description": "domain -> host count, generic replacement for any single hardcoded domain name.",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "host_bundles_seen": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "duplication": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instances_with_field_content": { "type": "integer", "minimum": 0 },
+        "instances_in_a_duplicate_group": { "type": "integer", "minimum": 0 },
+        "duplication_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "top_duplicate_group_sizes": { "type": "array", "items": { "type": "integer", "minimum": 2 } }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dead_zero_instances": { "type": "boolean" },
+        "only_in_unpublished_content": { "type": "boolean" },
+        "only_orphaned_detached_instances": { "type": "boolean" }
+      }
+    },
+    "component": {
+      "type": "object",
+      "required": ["id", "kind", "label", "key"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The source's own native id for this component. NOT guaranteed globally unique across kinds -- verified against a live source where paragraphs_library_item and block_content share MySQL's auto-increment integer id space (both had components literally id='1'), and a placement's machine name collided with a menu's machine name ('footer', 'global'). Use `key`, not `id` alone, as the disposition-matching identity."
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z_]+:.+$",
+          "description": "`{kind}:{id}`. The actual globally-unique identity for this component -- this is what a dispositions.json's `types{}` object is keyed by, never bare `id`."
+        },
+        "kind": { "$ref": "#/definitions/kind" },
+        "label": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "fields": { "type": "array", "items": { "$ref": "#/definitions/field" } },
+        "usage": { "$ref": "#/definitions/usage" },
+        "duplication": { "$ref": "#/definitions/duplication" },
+        "flags": { "$ref": "#/definitions/flags" },
+        "render_behavior": { "$ref": "#/definitions/renderBehavior" },
+        "render_source": { "$ref": "#/definitions/renderSource" },
+        "render_signals": { "type": "array", "items": { "$ref": "#/definitions/renderSignal" } },
+        "hosted_by": {
+          "type": "array",
+          "description": "Generic parent-placement references: [{host_kind, host_id, field_name}].",
+          "items": {
+            "type": "object",
+            "required": ["host_kind", "host_id", "field_name"],
+            "additionalProperties": false,
+            "properties": {
+              "host_kind": { "$ref": "#/definitions/kind" },
+              "host_id": { "type": "string" },
+              "field_name": { "type": "string" }
+            }
+          }
+        },
+        "nests": {
+          "type": "array",
+          "description": "Generic child references: [{kind, id, field_name}] — this component contains these.",
+          "items": {
+            "type": "object",
+            "required": ["kind", "id", "field_name"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "$ref": "#/definitions/kind" },
+              "id": { "type": "string" },
+              "field_name": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "libraryItem": {
+      "type": "object",
+      "required": ["id", "label", "paragraph_bundle", "host_count"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "paragraph_bundle": { "type": "string" },
+        "host_count": { "type": "integer", "minimum": 0 },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host_kind": { "$ref": "#/definitions/kind" },
+              "host_id": { "type": "string" },
+              "field_name": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "webform": {
+      "type": "object",
+      "required": ["id", "label", "status", "handlers"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "status": { "type": "string" },
+        "handlers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "plugin"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "plugin": { "type": "string" },
+              "status": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "submission_count": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "vocabulary": {
+      "type": "object",
+      "required": ["id", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "bundles_attached": { "type": "array", "items": { "type": "string" } },
+        "fields_attached": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "entity_type": { "type": "string" },
+              "bundle": { "type": "string" },
+              "field_name": { "type": "string" }
+            }
+          }
+        },
+        "term_id_hits_in_views": { "type": "array", "items": { "type": "string" } },
+        "term_id_hits_in_theme": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "stateKey": {
+      "type": "object",
+      "required": ["key"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "type": "string" },
+        "collection": { "type": ["string", "null"] },
+        "size_bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "changed": {
+          "type": ["string", "null"],
+          "description": "ISO8601 timestamp when the collection tracks one; null when not tracked by core (the common case for State API)."
+        }
+      }
+    },
+    "placement": {
+      "type": "object",
+      "required": ["id", "theme", "region", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "theme": { "type": "string" },
+        "region": { "type": "string" },
+        "weight": { "type": ["integer", "null"] },
+        "status": { "type": "boolean" },
+        "plugin": { "type": "string" },
+        "block_content_id": { "type": ["string", "null"] },
+        "visibility_conditions": { "type": "array", "items": { "type": "string" } },
+        "visibility_domains": { "type": "array", "items": { "type": "string" } },
+        "visibility_negate": { "type": ["boolean", "null"] },
+        "non_standard_region": {
+          "type": "boolean",
+          "description": "True when the region is not one of the active theme's declared regions (a signal the placement is injected by code rather than rendered by the normal region pipeline)."
+        }
+      }
+    },
+    "menu": {
+      "type": "object",
+      "required": ["id", "label", "link_count"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "link_count": { "type": "integer", "minimum": 0 },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "menu_link_id": { "type": "string" },
+              "attached_placement_id": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

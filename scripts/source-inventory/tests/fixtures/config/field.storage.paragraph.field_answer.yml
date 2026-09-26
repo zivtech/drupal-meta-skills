@@ -1,0 +1,5 @@
+field_name: field_answer
+type: text_long
+cardinality: 1
+settings: {}
+module: text

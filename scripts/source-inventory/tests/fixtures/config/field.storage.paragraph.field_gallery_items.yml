@@ -1,0 +1,6 @@
+field_name: field_gallery_items
+type: entity_reference_revisions
+cardinality: -1
+settings:
+  target_type: paragraph
+module: entity_reference_revisions

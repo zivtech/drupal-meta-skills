@@ -1,0 +1,6 @@
+field_name: field_domain_access
+type: entity_reference
+cardinality: -1
+settings:
+  target_type: taxonomy_term
+module: core

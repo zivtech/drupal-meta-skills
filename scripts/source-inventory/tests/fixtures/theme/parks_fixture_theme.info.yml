@@ -1,0 +1,9 @@
+name: Parks Fixture Theme
+type: theme
+description: Invented theme for the drupal-source-inventory test suite.
+core_version_requirement: ^10 || ^11
+regions:
+  header: Header
+  content: Content
+  sidebar_first: Sidebar first
+  footer: Footer

@@ -10,3 +10,9 @@ research/drupal-skills/raw/*.tmp
 # plugin eval run outputs
 evals/results/
 evals/**/results/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Default `analyze` output dir (site_profile.py) when the CLI runs from the repo root;
+# it holds a real site's inventory and must never be committed.
+inventory/generalized/

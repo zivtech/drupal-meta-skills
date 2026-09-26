@@ -1,0 +1,15 @@
+id: session_calendar
+label: Session Calendar
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_options:
+      filters:
+        field_topic_target_id:
+          plugin: taxonomy_index_tid
+          field: field_topic_target_id
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_options: {}

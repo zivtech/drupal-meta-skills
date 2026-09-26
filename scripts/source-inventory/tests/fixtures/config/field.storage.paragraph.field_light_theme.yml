@@ -1,0 +1,5 @@
+field_name: field_light_theme
+type: boolean
+cardinality: 1
+settings: {}
+module: core

@@ -1,0 +1,7 @@
+bundle: photo_showcase
+field_name: field_gallery_items
+label: Gallery items
+settings:
+  handler_settings:
+    target_bundles:
+      gallery_item: gallery_item

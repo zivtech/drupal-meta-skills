@@ -47,6 +47,11 @@
 - Risky paths have explicit validation steps.
 - Acceptance checks include critical user journeys.
 
+## Migration and Source-Structure Coverage
+- **MAJOR:** A migration/conversion plan proceeds with no `source-structure.json` inventory (see `contracts/source-structure/`), or with one or more components present in it that have no row in the accompanying `dispositions.json` (undispositioned — Gate G1). Point the author at `drupal-source-inventory` and `contracts/source-structure/validate-dispositions.py`.
+- A reviewed FACT/REF field lands in a CONTENT/LAYOUT disposition with no per-field destination (Gate G2) is a MAJOR finding, not a style note — it silently drops structured data as flattened markup.
+- A `dispositions.json` whose `source_structure_hash` doesn't match the current inventory is stale; counts in it should not be trusted until re-validated.
+
 ## Review Confidence
 - High confidence findings have direct evidence.
 - Medium/low confidence concerns are labeled and moved to open questions.

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Preprocess hooks for the parks fixture theme.
+ *
+ * Written for the drupal-source-inventory test suite. Each case block exists
+ * to trip exactly one render-signal category, so the scanner's per-bundle
+ * attribution can be asserted.
+ */
+
+use Drupal\Core\Site\Settings;
+
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function parks_fixture_theme_preprocess_paragraph(array &$variables): void {
+  $item = $variables['paragraph'];
+
+  switch ($item->getType()) {
+    case 'hero_banner':
+      // No signal: reads nothing but its own field.
+      $variables['tone'] = $item->get('field_light_theme')->value ? 'light' : 'dark';
+      break;
+
+    case 'trail_conditions':
+      // state_read: a staff-toggled flag, not a field on the paragraph.
+      $variables['closed'] = (bool) \Drupal::state()->get('parks_fixture.trails_closed', FALSE);
+      break;
+
+    case 'facility_map':
+      // config_read: the map tile key lives in settings.php.
+      $variables['tile_key'] = Settings::get('parks_fixture_map_tiles', '');
+      break;
+
+    case 'nearby_facilities':
+      // entity_query: loads other nodes at render time.
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      $variables['nearby'] = $storage->loadByProperties(['type' => 'facility', 'status' => 1]);
+      break;
+
+    case 'session_picker':
+      // view_embed plus service_call (the formatter is presentation only).
+      $variables['sessions'] = views_embed_view('session_calendar', 'page_1');
+      $variables['today'] = \Drupal::service('date.formatter')->format(time(), 'html_date');
+      break;
+  }
+}

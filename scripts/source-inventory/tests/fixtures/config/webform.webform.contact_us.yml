@@ -1,0 +1,7 @@
+id: contact_us
+title: Contact Us
+status: open
+handlers:
+  email_confirmation:
+    id: email
+    status: true

@@ -1,0 +1,513 @@
+{
+  "contract_version": "1.2.0",
+  "project": "example-parks-district",
+  "generated_at": "2026-09-24T00:00:00Z",
+  "profile": "fixtures/example-parks.profile.yaml",
+  "generator": {
+    "name": "drupal-source-inventory",
+    "version": "1.2.0"
+  },
+  "samples_enabled": false,
+  "data_quality": {
+    "parent_chain": {
+      "method": "entity_reference_revisions field tables (target_id/target_revision_id), not the denormalized parent_id column",
+      "total_child_rows": 322,
+      "stale_denormalized_parent_rows": 41,
+      "stale_pct": 12.7
+    },
+    "unresolved_tables": [
+      {
+        "entity_type": "paragraph",
+        "field_name": "field_residents_only",
+        "expected_table": "paragraph__field_residents_only",
+        "purpose": "field_profile"
+      }
+    ]
+  },
+  "counts": {
+    "node_bundle": 1,
+    "paragraph_type": 6,
+    "paragraphs_library_item": 1,
+    "block_content_type": 1,
+    "block_content": 1,
+    "placement": 1,
+    "menu": 1,
+    "menu_attachment": 1,
+    "webform": 1,
+    "state_setting": 1,
+    "view_listing": 1,
+    "total": 17
+  },
+  "components": [
+    {
+      "id": "program_page",
+      "kind": "node_bundle",
+      "label": "Program Page",
+      "fields": [
+        {
+          "name": "field_hero",
+          "field_type": "entity_reference_revisions",
+          "role": "REF",
+          "role_source": "reviewed",
+          "target_entity_type": "paragraph"
+        }
+      ],
+      "key": "node_bundle:program_page"
+    },
+    {
+      "id": "faq_accordion_row",
+      "kind": "paragraph_type",
+      "label": "FAQ Accordion Row",
+      "description": "One row of an FAQ-style accordion.",
+      "fields": [
+        {
+          "name": "field_question",
+          "field_type": "string",
+          "role": "PROSE",
+          "role_source": "heuristic",
+          "fill_rate_pct": 98.0
+        },
+        {
+          "name": "field_answer",
+          "field_type": "text_long",
+          "role": "PROSE",
+          "role_source": "heuristic",
+          "fill_rate_pct": 93.5
+        },
+        {
+          "name": "field_price",
+          "field_type": "decimal",
+          "role": "FACT",
+          "role_source": "reviewed",
+          "fill_rate_pct": 12.0
+        }
+      ],
+      "usage": {
+        "total_instances": 200,
+        "published_hosts": 188,
+        "unpublished_hosts": 16,
+        "library_owned_instances": 0,
+        "block_hosted_instances": 0,
+        "unresolved_instances": 0,
+        "shared_by_multiple_hosts": 4,
+        "distinct_host_count": 42
+      },
+      "duplication": {
+        "instances_with_field_content": 200,
+        "instances_in_a_duplicate_group": 30,
+        "duplication_pct": 15.0,
+        "top_duplicate_group_sizes": [
+          6,
+          4
+        ]
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": true,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "authored",
+      "key": "paragraph_type:faq_accordion_row"
+    },
+    {
+      "id": "hero_banner",
+      "kind": "paragraph_type",
+      "label": "Hero Banner",
+      "fields": [
+        {
+          "name": "field_residents_only",
+          "field_type": "boolean",
+          "role": "FACT",
+          "role_source": "reviewed"
+        },
+        {
+          "name": "field_light_theme",
+          "field_type": "boolean",
+          "role": "PRESENTATION",
+          "role_source": "heuristic",
+          "fill_rate_pct": 40.0
+        }
+      ],
+      "usage": {
+        "total_instances": 40,
+        "published_hosts": 36,
+        "unpublished_hosts": 0,
+        "library_owned_instances": 0,
+        "block_hosted_instances": 4,
+        "unresolved_instances": 0,
+        "shared_by_multiple_hosts": 0,
+        "distinct_host_count": 40
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": true,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "extracted",
+      "render_signals": [],
+      "key": "paragraph_type:hero_banner"
+    },
+    {
+      "id": "upcoming_sessions",
+      "kind": "paragraph_type",
+      "label": "Upcoming Sessions",
+      "fields": [],
+      "usage": {
+        "total_instances": 15,
+        "published_hosts": 15,
+        "unpublished_hosts": 0,
+        "distinct_host_count": 15
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": false,
+        "queries_other_content": true,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "extracted",
+      "render_signals": [
+        {
+          "signal_type": "view_embed",
+          "file": "templates/paragraphs/paragraph--upcoming-sessions.html.twig",
+          "line": 8,
+          "snippet": "{{ drupal_view('session_calendar', 'page_1') }}",
+          "detail": "Embeds a Views display; its contextual filter reads the current route."
+        }
+      ],
+      "key": "paragraph_type:upcoming_sessions"
+    },
+    {
+      "id": "legacy_promo",
+      "kind": "paragraph_type",
+      "label": "Legacy Promo",
+      "fields": [],
+      "usage": {
+        "total_instances": 0,
+        "published_hosts": 0,
+        "unpublished_hosts": 0,
+        "distinct_host_count": 0
+      },
+      "flags": {
+        "dead_zero_instances": true,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": true,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "none",
+      "key": "paragraph_type:legacy_promo"
+    },
+    {
+      "id": "fee_schedule",
+      "kind": "paragraph_type",
+      "label": "Fee Schedule",
+      "fields": [],
+      "usage": {
+        "total_instances": 3,
+        "published_hosts": 3,
+        "unpublished_hosts": 0,
+        "distinct_host_count": 3
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": false,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": true
+      },
+      "render_source": "extracted",
+      "render_signals": [
+        {
+          "signal_type": "hardcoded_literal",
+          "file": "templates/paragraphs/paragraph--fee-schedule.html.twig",
+          "line": 8,
+          "snippet": "<tr><td>Pool day pass, resident</td><td class=\"fee\">$3</td></tr>",
+          "detail": "Currency-shaped literal not backed by any field on this type (0 configured fields)."
+        }
+      ],
+      "key": "paragraph_type:fee_schedule"
+    },
+    {
+      "id": "gallery_item",
+      "kind": "paragraph_type",
+      "label": "Gallery Item",
+      "description": "IEF-only child: nested inside photo_showcase, never hosted directly by a node bundle.",
+      "fields": [
+        {
+          "name": "field_image",
+          "field_type": "image",
+          "role": "MEDIA",
+          "role_source": "heuristic",
+          "fill_rate_pct": 100.0
+        }
+      ],
+      "hosted_by": [
+        {
+          "host_kind": "paragraph_type",
+          "host_id": "photo_showcase",
+          "field_name": "field_gallery_items"
+        }
+      ],
+      "usage": {
+        "total_instances": 60,
+        "published_hosts": 60,
+        "unpublished_hosts": 0,
+        "library_owned_instances": 0,
+        "unresolved_instances": 0,
+        "distinct_host_count": 12
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": false
+      },
+      "render_behavior": {
+        "own_fields_only": true,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "authored",
+      "key": "paragraph_type:gallery_item"
+    },
+    {
+      "id": "orphaned_widget",
+      "kind": "paragraph_type",
+      "label": "Orphaned Widget",
+      "description": "Every instance is orphaned/detached (parent_type NULL).",
+      "fields": [],
+      "usage": {
+        "total_instances": 4,
+        "published_hosts": 0,
+        "unpublished_hosts": 0,
+        "library_owned_instances": 0,
+        "unresolved_instances": 4,
+        "distinct_host_count": 0
+      },
+      "flags": {
+        "dead_zero_instances": false,
+        "only_in_unpublished_content": false,
+        "only_orphaned_detached_instances": true
+      },
+      "render_behavior": {
+        "own_fields_only": true,
+        "queries_other_content": false,
+        "global_settings_or_state": false,
+        "hardcoded_content": false
+      },
+      "render_source": "none",
+      "key": "paragraph_type:orphaned_widget"
+    },
+    {
+      "id": "shared_closure_notice",
+      "kind": "paragraphs_library_item",
+      "label": "Shared Closure Notice",
+      "key": "paragraphs_library_item:shared_closure_notice"
+    },
+    {
+      "id": "footer_social",
+      "kind": "block_content_type",
+      "label": "Footer Social Links",
+      "fields": [
+        {
+          "name": "field_social_facebook",
+          "field_type": "link",
+          "role": "FACT",
+          "role_source": "reviewed",
+          "fill_rate_pct": 100.0
+        },
+        {
+          "name": "field_social_instagram",
+          "field_type": "link",
+          "role": "FACT",
+          "role_source": "reviewed",
+          "fill_rate_pct": 100.0
+        }
+      ],
+      "key": "block_content_type:footer_social"
+    },
+    {
+      "id": "footer_social_main",
+      "kind": "block_content",
+      "label": "Footer Social (main)",
+      "key": "block_content:footer_social_main"
+    },
+    {
+      "id": "footer_social_main_placement",
+      "kind": "placement",
+      "label": "Footer Social (main) placement",
+      "key": "placement:footer_social_main_placement"
+    },
+    {
+      "id": "main_navigation",
+      "kind": "menu",
+      "label": "Main Navigation",
+      "key": "menu:main_navigation"
+    },
+    {
+      "id": "main_navigation_dropdown_extra",
+      "kind": "menu_attachment",
+      "label": "Main Navigation: dropdown-attached block link",
+      "key": "menu_attachment:main_navigation_dropdown_extra"
+    },
+    {
+      "id": "contact_us",
+      "kind": "webform",
+      "label": "Contact Us",
+      "key": "webform:contact_us"
+    },
+    {
+      "id": "example_parks.maintenance_mode",
+      "kind": "state_setting",
+      "label": "example_parks.maintenance_mode",
+      "key": "state_setting:example_parks.maintenance_mode"
+    },
+    {
+      "id": "session_calendar",
+      "kind": "view_listing",
+      "label": "Session Calendar",
+      "key": "view_listing:session_calendar"
+    }
+  ],
+  "library_items": [
+    {
+      "id": "shared_closure_notice",
+      "label": "Shared Closure Notice",
+      "paragraph_bundle": "shared_paragraph_library",
+      "host_count": 3,
+      "hosts": [
+        {
+          "host_kind": "node_bundle",
+          "host_id": "program_page",
+          "field_name": "field_content"
+        },
+        {
+          "host_kind": "node_bundle",
+          "host_id": "landing_page",
+          "field_name": "field_content"
+        },
+        {
+          "host_kind": "node_bundle",
+          "host_id": "landing_page",
+          "field_name": "field_sidebar"
+        }
+      ]
+    }
+  ],
+  "webforms": [
+    {
+      "id": "contact_us",
+      "label": "Contact Us",
+      "status": "open",
+      "handlers": [
+        {
+          "id": "email_confirmation",
+          "plugin": "email",
+          "status": "enabled"
+        }
+      ],
+      "submission_count": 812
+    }
+  ],
+  "vocabularies": [
+    {
+      "id": "program_topics",
+      "label": "Program Topics",
+      "bundles_attached": [
+        "program_page"
+      ],
+      "fields_attached": [
+        {
+          "entity_type": "node",
+          "bundle": "program_page",
+          "field_name": "field_topic"
+        }
+      ],
+      "term_id_hits_in_views": [
+        "session_calendar:filter:field_topic_target_id"
+      ],
+      "term_id_hits_in_theme": []
+    }
+  ],
+  "state_keys": [
+    {
+      "key": "example_parks.maintenance_mode",
+      "collection": "state",
+      "size_bytes": 5,
+      "changed": null
+    }
+  ],
+  "domains": {
+    "enabled_domains": [
+      "central",
+      "aquatics",
+      "trails"
+    ],
+    "ownership_field": "field_domain_access",
+    "per_component_domain_fill": {
+      "program_page": {
+        "central": 107,
+        "aquatics": 40,
+        "trails": 10
+      }
+    }
+  },
+  "placements": [
+    {
+      "id": "footer_social_main_placement",
+      "theme": "parks_fixture_theme",
+      "region": "footer",
+      "weight": 0,
+      "status": true,
+      "plugin": "block_content:footer_social_main",
+      "block_content_id": "footer_social_main",
+      "visibility_conditions": [
+        "domain"
+      ],
+      "visibility_domains": [
+        "central",
+        "aquatics"
+      ],
+      "visibility_negate": false,
+      "non_standard_region": false
+    }
+  ],
+  "menus": [
+    {
+      "id": "main_navigation",
+      "label": "Main Navigation",
+      "link_count": 12,
+      "attachments": [
+        {
+          "menu_link_id": "main_navigation_dropdown_extra",
+          "attached_placement_id": "footer_social_main_placement"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{#
+  Fixture template for the upcoming_sessions paragraph type. It has no
+  fields of its own: it lists the next sessions from a View, whose
+  contextual filter takes the program from the current route.
+#}
+<section class="upcoming-sessions">
+  <h2>{{ 'Upcoming sessions'|t }}</h2>
+  {{ drupal_view('session_calendar', 'page_1') }}
+</section>

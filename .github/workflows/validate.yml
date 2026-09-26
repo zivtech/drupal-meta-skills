@@ -17,7 +17,7 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml
+          pip install pyyaml jsonschema pytest
 
       - name: Required files
         run: |
@@ -27,9 +27,45 @@ jobs:
           test -f .claude/skills/drupal-critic/references/external-skills-manifest.yaml
           test -f .claude/skills/drupal-planner/SKILL.md
           test -f .claude/skills/drupal-config-executor/SKILL.md
+          test -f .claude/skills/drupal-source-inventory/SKILL.md
+          test -f .claude/agents/drupal-source-inventory.md
+          test -f contracts/source-structure/README.md
+          test -f contracts/source-structure/VERSION
+          test -f contracts/source-structure/source-structure.schema.json
+          test -f contracts/source-structure/dispositions.schema.json
+          test -f contracts/source-structure/validate-dispositions.py
 
       - name: Verify external skill policy
         run: python scripts/verify_no_copied_skills.py
 
       - name: Check manifest freshness
         run: python scripts/refresh_external_skills.py --check
+
+      - name: Validate source-structure contract fixtures
+        run: |
+          python contracts/source-structure/validate-dispositions.py \
+            contracts/source-structure/fixtures/valid/source-structure.json \
+            contracts/source-structure/fixtures/valid/dispositions.json
+          # Negative control MUST fail, and specifically for the undispositioned-
+          # component reason (Gate G1) -- not merely "fail for any reason", which
+          # would also pass if the fixture broke in some unrelated way.
+          set +e
+          output=$(python contracts/source-structure/validate-dispositions.py \
+              contracts/source-structure/fixtures/invalid/source-structure.json \
+              contracts/source-structure/fixtures/invalid/dispositions.json 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "Negative-control fixture unexpectedly PASSED validation" >&2
+            exit 1
+          fi
+          if ! echo "$output" | grep -q "package.component_undispositioned"; then
+            echo "Negative-control fixture failed, but not for the expected reason (package.component_undispositioned)" >&2
+            exit 1
+          fi
+
+      - name: Run drupal-source-inventory pytest suite (includes PII regex scan)
+        run: |
+          cd scripts/source-inventory
+          python -m pytest -q

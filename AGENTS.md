@@ -10,6 +10,7 @@
 | drupal-search-planner | planner | `/drupal-planner.search` | Search architecture deep dive |
 | drupal-critic | critic | `/drupal-critic` | Read-only Drupal review surface |
 | drupal-config-executor | executor | `/drupal-config-executor` | Generates config YAML from planner specs |
+| drupal-source-inventory | executor | `/drupal-source-inventory` | Bash-capable, read-only: inventories a live Drupal source into source-structure.json before a migration plan touches it |
 
 ## The 8-Step Drupal Lifecycle
 
@@ -31,3 +32,4 @@ The critic serves at **two checkpoints** — after planning and after implementa
 - All planner, critic, and executor surfaces are shipped from this repository.
 - The config executor is the concrete generation step between planning and review.
 - The same dual-checkpoint pattern applies to accessibility work — see the [visual explainer](https://zivtech.github.io/drupal-meta-skills/) for the a11y lifecycle variant using `a11y-planner`, `a11y-critic`, and `a11y-test`.
+- `drupal-source-inventory` sits *before* step 1 for migration/conversion work: it produces `source-structure.json` (contract in `contracts/source-structure/`) that `drupal-migration-planner`'s Phase 2 gates on. It is Bash-capable and read-only against the source — the opposite tool-access shape from the planners (Bash-disallowed) and the config executor (writes, doesn't read a live source). It never authors a disposition itself; a human authors `dispositions.json` against its output.

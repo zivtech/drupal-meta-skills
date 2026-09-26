@@ -1,0 +1,24 @@
+# Authored render-behavior overlay — example / template.
+#
+# One row per component id that a human has actually reviewed. Any bundle
+# NOT listed here falls back to the render-signals extractor's own
+# conservative rollup (render_source: extracted) if it found any signals,
+# or the "own fields only" default (render_source: none) if it found
+# nothing. See contracts/source-structure/README.md "Render behavior:
+# extracted vs. authored".
+#
+# Do not add a row here you have not actually verified — an authored row
+# is a stronger claim than an extracted one, and it wins even when it
+# disagrees with the scanner.
+
+overlays:
+  event_roundup:
+    own_fields_only: false
+    queries_other_content: true
+    global_settings_or_state: true
+    hardcoded_content: false
+    evidence: >
+      Preprocess case runs a Views execute() and a form builder call; also
+      reads a domain-negotiator service to choose which view display to
+      run. See render_signals[] on this component for file:line evidence
+      the scanner found; this row is the human confirmation on top of it.

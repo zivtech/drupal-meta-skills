@@ -14,12 +14,14 @@ This repository is the consolidated public package for Zivtech's Drupal planner-
 | drupal-planner.search | planner | `/drupal-planner.search` |
 | drupal-critic | critic | `/drupal-critic` |
 | drupal-config-executor | executor | `/drupal-config-executor` |
+| drupal-source-inventory | executor | `/drupal-source-inventory` |
 
 ## Structure
 
 - Root `.claude/skills/*/SKILL.md` files are the installable skill definitions.
 - Root `.claude/agents/*.md` files are the companion agent prompts.
-- `scripts/` contains the external skill manifest maintenance tooling.
+- `contracts/` contains shared, target-agnostic data contracts (schemas + rubric + validator) that a skill's scripts implement against. See `contracts/source-structure/README.md`.
+- `scripts/` contains the external skill manifest maintenance tooling. `scripts/source-inventory/` is the drupal-source-inventory skill's own implementation + pytest suite.
 - `research/` contains tracked Drupal ecosystem analysis assets.
 - `templates/` contains the copied planner, critic, and executor base protocols.
 

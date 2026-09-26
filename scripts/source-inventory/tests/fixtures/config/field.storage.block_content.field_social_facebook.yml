@@ -1,0 +1,5 @@
+field_name: field_social_facebook
+type: link
+cardinality: 1
+settings: {}
+module: link
