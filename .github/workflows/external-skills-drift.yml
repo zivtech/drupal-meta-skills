@@ -1,0 +1,45 @@
+name: external-skills-drift
+
+# Reports when third-party skills referenced in the external skills manifest
+# have moved past their pinned commits. This check is non-hermetic: its result
+# depends on upstream repos, not on this repo's contents. That is why it runs
+# on a schedule rather than gating pushes and pull requests (validate.yml).
+#
+# A red run means "upstream changed since the pins were last reviewed", not
+# "this repo is broken". To clear it, run the script without --check locally,
+# review every compare link and content-scan warning in the generated report,
+# and commit the refreshed manifest in its own PR.
+
+on:
+  schedule:
+    - cron: '17 9 * * 1'  # Mondays 09:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Check manifest freshness
+        run: python scripts/refresh_external_skills.py --check
+
+      - name: Upload refresh report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-skills-refresh-report
+          path: research/drupal-skills/reports/external-skills-refresh-report.md
+          if-no-files-found: ignore
