@@ -25,7 +25,7 @@ python3 scripts/verify_no_copied_skills.py
 
 Both scripts require PyYAML: `pip install pyyaml`
 
-CI runs both checks on every push/PR via `.github/workflows/validate.yml` (Python 3.12).
+CI runs `verify_no_copied_skills.py` on every push/PR via `.github/workflows/validate.yml` (Python 3.12). The `--check` freshness test runs weekly (and on manual dispatch) via `.github/workflows/external-skills-drift.yml`, not on push/PR: its result depends on upstream repos' current HEAD, so it would fail unrelated changes whenever an upstream repo commits. A red drift run means the pins need a reviewed refresh, not that the repo is broken.
 
 ## Architecture
 

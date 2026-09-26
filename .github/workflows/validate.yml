@@ -38,8 +38,10 @@ jobs:
       - name: Verify external skill policy
         run: python scripts/verify_no_copied_skills.py
 
-      - name: Check manifest freshness
-        run: python scripts/refresh_external_skills.py --check
+      # Upstream pin freshness is deliberately NOT checked here. It compares the
+      # manifest against third-party repos' current HEAD, so its result changes
+      # without any change to this repo and would fail every unrelated PR. It
+      # runs on a schedule instead: see external-skills-drift.yml.
 
       - name: Validate source-structure contract fixtures
         run: |
