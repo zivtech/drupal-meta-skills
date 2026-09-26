@@ -71,3 +71,6 @@ jobs:
         run: |
           cd scripts/source-inventory
           python -m pytest -q
+
+      - name: Run repo script tests
+        run: python -m pytest -q scripts/tests

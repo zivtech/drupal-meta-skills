@@ -1,10 +1,10 @@
 version: 1
-generated_at: '2026-03-28T14:16:44Z'
+generated_at: '2026-09-26T18:50:15Z'
 skills:
 - id: madsnorgaard/agent-resources/drupal-expert
   skills_url: https://skills.sh/madsnorgaard/agent-resources/drupal-expert
   repo_url: https://github.com/madsnorgaard/agent-resources
-  pinned_commit: 776e73407d0871cd67552d426db11b4f09fbd5c6
+  pinned_commit: 8bdcb0f304fee925b58291c9216664c7ee9379c8
   categories:
   - core-review
   audiences_supported:
@@ -18,7 +18,7 @@ skills:
 - id: madsnorgaard/agent-resources/drupal-security
   skills_url: https://skills.sh/madsnorgaard/agent-resources/drupal-security
   repo_url: https://github.com/madsnorgaard/agent-resources
-  pinned_commit: 776e73407d0871cd67552d426db11b4f09fbd5c6
+  pinned_commit: 8bdcb0f304fee925b58291c9216664c7ee9379c8
   categories:
   - core-review
   - security
@@ -43,7 +43,7 @@ skills:
 - id: mindrally/skills/drupal-development
   skills_url: https://skills.sh/mindrally/skills/drupal-development
   repo_url: https://github.com/mindrally/skills
-  pinned_commit: 47f47c12e62f62b5e171bd5af61d0fc24b329701
+  pinned_commit: 97184105b5daa3a6860a2aeb8e7e7fd1c42da40a
   categories:
   - core-review
   audiences_supported:
@@ -76,7 +76,7 @@ skills:
 - id: kanopi/cms-cultivator/drupalorg-issue-helper
   skills_url: https://skills.sh/kanopi/cms-cultivator/drupalorg-issue-helper
   repo_url: https://github.com/kanopi/cms-cultivator
-  pinned_commit: e2e8783a3158844798a10b021af2bcec8956cb3e
+  pinned_commit: b11091b58d8eb6a331d93de70c4fdc27df366f79
   categories:
   - contrib
   - issue-queue
@@ -87,7 +87,7 @@ skills:
 - id: kanopi/cms-cultivator/drupalorg-contribution-helper
   skills_url: https://skills.sh/kanopi/cms-cultivator/drupalorg-contribution-helper
   repo_url: https://github.com/kanopi/cms-cultivator
-  pinned_commit: e2e8783a3158844798a10b021af2bcec8956cb3e
+  pinned_commit: b11091b58d8eb6a331d93de70c4fdc27df366f79
   categories:
   - contrib
   audiences_supported:
@@ -97,7 +97,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-cache-contexts
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-cache-contexts
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   audiences_supported:
@@ -108,7 +108,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-cache-tags
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-cache-tags
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   audiences_supported:
@@ -119,7 +119,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-cache-maxage
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-cache-maxage
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   audiences_supported:
@@ -130,7 +130,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-dynamic-cache
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-dynamic-cache
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   audiences_supported:
@@ -141,7 +141,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-cache-debugging
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-cache-debugging
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   audiences_supported:
@@ -152,7 +152,7 @@ skills:
 - id: sparkfabrik/sf-awesome-copilot/drupal-lazy-builders
   skills_url: https://skills.sh/sparkfabrik/sf-awesome-copilot/drupal-lazy-builders
   repo_url: https://github.com/sparkfabrik/sf-awesome-copilot
-  pinned_commit: 233c2e9f637ebbad4e9aaac7b6520e57bc2cebb7
+  pinned_commit: 0b17a929f3d2bebd3dcab05c4034dea710efb66a
   categories:
   - cache
   - rendering
@@ -164,7 +164,7 @@ skills:
 - id: drupal-canvas/skills/canvas-component-definition
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-definition
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -175,7 +175,7 @@ skills:
 - id: drupal-canvas/skills/canvas-component-metadata
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-metadata
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -186,7 +186,7 @@ skills:
 - id: drupal-canvas/skills/canvas-component-utils
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-utils
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -197,7 +197,7 @@ skills:
 - id: drupal-canvas/skills/canvas-data-fetching
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-data-fetching
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -208,7 +208,7 @@ skills:
 - id: drupal-canvas/skills/canvas-styling-conventions
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-styling-conventions
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -219,7 +219,7 @@ skills:
 - id: drupal-canvas/skills/canvas-component-composability
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-composability
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -230,7 +230,7 @@ skills:
 - id: drupal-canvas/skills/canvas-component-push
   skills_url: https://skills.sh/drupal-canvas/skills/canvas-component-push
   repo_url: https://github.com/drupal-canvas/skills
-  pinned_commit: 5547352118a6011c21dd9516f7d19eaee9c03e7f
+  pinned_commit: ee67425e1ab22420749b13dfb5934da5cb776f44
   categories:
   - canvas
   audiences_supported:
@@ -241,7 +241,7 @@ skills:
 - id: grasmash/drupal-claude-skills/drupal-ddev
   skills_url: https://skills.sh/grasmash/drupal-claude-skills/drupal-ddev
   repo_url: https://github.com/grasmash/drupal-claude-skills
-  pinned_commit: 008bd15c66d616427c5c97a5a676052a754e5682
+  pinned_commit: eb9b3d3717325815511799cffb340b75f52e8d25
   categories:
   - tooling
   audiences_supported:
@@ -263,7 +263,7 @@ skills:
 - id: madsnorgaard/drupal-agent-resources/ddev-expert
   skills_url: https://skills.sh/madsnorgaard/drupal-agent-resources/ddev-expert
   repo_url: https://github.com/madsnorgaard/drupal-agent-resources
-  pinned_commit: 776e73407d0871cd67552d426db11b4f09fbd5c6
+  pinned_commit: 8bdcb0f304fee925b58291c9216664c7ee9379c8
   categories:
   - tooling
   audiences_supported:
